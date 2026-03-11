@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Emergência Transital PRO</title>
+    <!-- Biblioteca do Scanner -->
+    <script src="https://unpkg.com"></script>
     <style>
         :root { 
             --amarelo: #ffcc00; --vermelho: #d90429; --verde: #2ecc71; 
@@ -28,25 +30,26 @@
             margin-bottom: 15px;
         }
         .btn-base:active { transform: scale(0.98); }
-        
-        .btn-inicio { padding: 25px 10px; font-size: 14px; flex-direction: column; margin-bottom: 0; }
-        .btn-idoso { padding: 45px 20px; font-size: 26px; }
+        .btn-inicio { padding: 20px 10px; font-size: 12px; flex-direction: column; margin-bottom: 0; }
+        .btn-idoso { padding: 40px 20px; font-size: 24px; }
 
         /* Cores */
         .bg-vermelho { background: var(--vermelho); }
         .bg-verde { background: var(--verde); }
         .bg-azul { background: #3498db; }
-        .bg-laranja { background: #f39c12; }
         .bg-rosa { background: #e91e63; }
+        .bg-roxo { background: #9b59b6; }
 
-        /* Formulários */
-        input, textarea, select { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #333; background: #252525; color: white; box-sizing: border-box; font-size: 16px; }
+        /* Scanner */
+        #reader { width: 100% !important; border-radius: 20px; overflow: hidden; border: 2px solid var(--amarelo); }
 
-        /* MENU INFERIOR */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000; }
-        nav button { background: none; border: none; color: #666; font-size: 10px; display: flex; flex-direction: column; align-items: center; outline: none; }
+        /* MENU INFERIOR (5 ÍCONES) */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; z-index: 1000; }
+        nav button { background: none; border: none; color: #666; font-size: 9px; display: flex; flex-direction: column; align-items: center; outline: none; flex: 1; }
         nav button.active-nav { color: var(--amarelo); }
-        .nav-icon { font-size: 22px; margin-bottom: 4px; }
+        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+
+        input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #333; background: #252525; color: white; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -56,38 +59,31 @@
     <div class="content">
         <!-- PÁGINA 1: INÍCIO -->
         <div id="home" class="page active">
-            <h3 style="text-align:center; margin-bottom: 20px;">Painel de Emergência</h3>
+            <h3 style="text-align:center; margin-bottom: 15px;">Painel de Controle</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <a href="tel:191" class="btn-base btn-inicio bg-vermelho"><span>🚨</span> POLÍCIA (191)</a>
+                <a href="tel:191" class="btn-base btn-inicio bg-vermelho"><span>🚨</span> POLÍCIA</a>
                 <a href="tel:193" class="btn-base btn-inicio bg-vermelho" style="background:#b91c1c;"><span>🚑</span> BOMBEIROS</a>
-                <button onclick="enviarZap()" class="btn-base btn-inicio bg-verde"><span>📍</span> ENVIAR ZAP</button>
-                <button onclick="showPage('familia', document.getElementById('nav-familia'))" class="btn-base btn-inicio bg-rosa"><span>❤️</span> FAMÍLIA</button>
+                <button onclick="enviarZap()" class="btn-base btn-inicio bg-verde"><span>📍</span> MANDAR ZAP</button>
+                <button onclick="showPage('camera', document.getElementById('nav-camera'))" class="btn-base btn-inicio bg-roxo"><span>📷</span> LER PLACA</button>
             </div>
-            <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base bg-azul" style="margin-top: 20px; padding: 20px;">🗺️ VER MAPA EM TEMPO REAL</button>
+            <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base bg-azul" style="margin-top: 15px; padding: 15px;">🗺️ VER MAPA E TRÂNSITO</button>
         </div>
 
-        <!-- PÁGINA 2: MODO IDOSO -->
+        <!-- PÁGINA 2: IDOSO -->
         <div id="idoso" class="page">
-            <h2 style="text-align:center; color:var(--amarelo); margin-bottom:25px;">MODO FÁCIL</h2>
-            <a href="tel:191" class="btn-base btn-idoso bg-vermelho">📞 LIGAR PARA A POLÍCIA</a>
-            <button id="btn-call-familia-idoso" onclick="ligarFamilia()" class="btn-base btn-idoso bg-rosa">❤️ LIGAR PARA FILHO(A)</button>
+            <a href="tel:191" class="btn-base btn-idoso bg-vermelho">📞 POLÍCIA</a>
+            <button onclick="ligarFamilia()" class="btn-base btn-idoso bg-rosa">❤️ FAMÍLIA</button>
             <button onclick="enviarZap()" class="btn-base btn-idoso bg-verde">🟢 MANDAR ZAP</button>
         </div>
 
-        <!-- PÁGINA 3: FAMÍLIA (CONTATO DE EMERGÊNCIA) -->
+        <!-- PÁGINA 3: FAMÍLIA -->
         <div id="familia" class="page">
-            <h2 style="color:var(--amarelo); text-align:center;">Contato de Emergência</h2>
-            <div style="background:#252525; padding:20px; border-radius:20px; border:1px solid #444;">
-                <p style="font-size:14px; margin-top:0;">Salve o contato de um parente próximo:</p>
-                <input type="text" id="nome-familia" placeholder="Nome (ex: Filho João)">
-                <input type="tel" id="tel-familia" placeholder="Telefone com DDD">
-                <button onclick="salvarFamilia()" class="btn-base bg-verde" style="padding:15px; margin-bottom:0;">💾 SALVAR CONTATO</button>
-            </div>
-            <div id="contato-salvo" style="margin-top:25px; display:none;">
-                <p style="text-align:center;">Contato Atual:</p>
-                <button onclick="ligarFamilia()" class="btn-base bg-rosa" style="padding:25px;">
-                    <span id="display-nome">Ligar</span>
-                </button>
+            <h3 style="color:var(--amarelo); text-align:center;">Contato de Emergência</h3>
+            <input type="text" id="nome-familia" placeholder="Nome do Parente">
+            <input type="tel" id="tel-familia" placeholder="DDD + Número">
+            <button onclick="salvarFamilia()" class="btn-base bg-verde" style="padding:15px;">💾 SALVAR</button>
+            <div id="contato-salvo" style="margin-top:20px; display:none; text-align:center;">
+                <button onclick="ligarFamilia()" class="btn-base bg-rosa" style="padding:20px;">📞 LIGAR AGORA</button>
             </div>
         </div>
 
@@ -95,17 +91,29 @@
         <div id="mapa" class="page" style="padding:0; height:100%;">
             <iframe id="google-maps" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
+
+        <!-- PÁGINA 5: CÂMERA (SCANNER) -->
+        <div id="camera" class="page">
+            <h3 style="text-align:center; color:var(--amarelo);">Identificador de Placas</h3>
+            <div id="reader"></div>
+            <div id="res-scan" style="display:none; margin-top:20px; background:#252525; padding:20px; border-radius:20px; border:1px solid var(--amarelo);">
+                <h4 id="pl-nome" style="color:var(--amarelo); margin:0;"></h4>
+                <p id="pl-desc" style="font-size:14px;"></p>
+                <button class="btn-base bg-azul" onclick="restartScan()" style="padding:10px; margin-top:10px;">ESCANEAR OUTRA</button>
+            </div>
+        </div>
     </div>
 
     <nav>
         <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
         <button onclick="showPage('idoso', this)"><span class="nav-icon">👴</span>Idoso</button>
-        <button id="nav-familia" onclick="showPage('familia', this)"><span class="nav-icon">❤️</span>Família</button>
+        <button onclick="showPage('familia', this)"><span class="nav-icon">❤️</span>Família</button>
         <button id="nav-mapa" onclick="showPage('mapa', this)"><span class="nav-icon">🗺️</span>Mapa</button>
+        <button id="nav-camera" onclick="showPage('camera', this)"><span class="nav-icon">📷</span>Câmera</button>
     </nav>
 
     <script>
-        let lat, lon;
+        let lat, lon, scanner;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(p => {
                 lat = p.coords.latitude; lon = p.coords.longitude;
@@ -113,49 +121,42 @@
             });
         }
 
-        // FUNÇÕES FAMÍLIA
-        function salvarFamilia() {
-            const nome = document.getElementById('nome-familia').value;
-            const tel = document.getElementById('tel-familia').value;
-            if(nome && tel) {
-                localStorage.setItem('ice_nome', nome);
-                localStorage.setItem('ice_tel', tel);
-                alert("Contato de Emergência salvo!");
-                carregarFamilia();
-            } else { alert("Preencha nome e telefone."); }
-        }
-
-        function carregarFamilia() {
-            const nome = localStorage.getItem('ice_nome');
-            const tel = localStorage.getItem('ice_tel');
-            if(nome && tel) {
-                document.getElementById('contato-salvo').style.display = 'block';
-                document.getElementById('display-nome').innerText = `📞 Ligar para ${nome}`;
-                document.getElementById('btn-call-familia-idoso').innerText = `❤️ LIGAR ${nome.toUpperCase()}`;
-            }
-        }
-
-        function ligarFamilia() {
-            const tel = localStorage.getItem('ice_tel');
-            if(tel) window.location.href = `tel:${tel}`;
-            else { 
-                alert("Nenhum contato salvo. Vá na aba Família ❤️");
-                showPage('familia', document.getElementById('nav-familia'));
-            }
-        }
-
         function showPage(pId, b) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pId).classList.add('active');
             document.querySelectorAll('nav button').forEach(n => n.classList.remove('active-nav'));
             b.classList.add('active-nav');
+            if(pId === 'camera') startScan(); else stopScan();
         }
 
+        function startScan() {
+            scanner = new Html5Qrcode("reader");
+            scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (txt) => {
+                document.getElementById('reader').style.display = 'none';
+                document.getElementById('res-scan').style.display = 'block';
+                document.getElementById('pl-nome').innerText = "Placa Identificada";
+                document.getElementById('pl-desc').innerText = "Resultado: " + txt;
+                scanner.stop();
+            }).catch(e => console.log(e));
+        }
+        function restartScan() { document.getElementById('reader').style.display='block'; document.getElementById('res-scan').style.display='none'; startScan(); }
+        function stopScan() { if(scanner) scanner.stop().catch(()=>null); }
+
+        function salvarFamilia() {
+            localStorage.setItem('ice_nome', document.getElementById('nome-familia').value);
+            localStorage.setItem('ice_tel', document.getElementById('tel-familia').value);
+            alert("Salvo!"); carregarFamilia();
+        }
+        function carregarFamilia() {
+            if(localStorage.getItem('ice_tel')) document.getElementById('contato-salvo').style.display = 'block';
+        }
+        function ligarFamilia() {
+            const t = localStorage.getItem('ice_tel');
+            if(t) window.location.href = `tel:${t}`; else alert("Salve um contato primeiro!");
+        }
         function enviarZap() {
-            if(lat) window.location.href = `https://wa.me! Minha localização: https://www.google.com{lat},${lon}`;
-            else alert("Aguarde o GPS carregar...");
+            if(lat) window.location.href = `https://wa.me! Local: https://www.google.com{lat},${lon}`;
         }
-
         window.onload = carregarFamilia;
     </script>
 </body>
