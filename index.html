@@ -16,10 +16,14 @@
         }
         .emergencia { background: #e63946; } /* Vermelho */
         .zap { background: #25d366; }       /* Verde WhatsApp */
-        .info { background: #4a4a4a; border: 2px solid #ffcc00; text-align: left; padding: 15px; border-radius: 15px; margin-top: 20px; }
-        .icon-grande { font-size: 35px; margin-bottom: 5px; }
-        .sub { font-size: 12px; font-weight: normal; opacity: 0.9; }
-        li { margin-bottom: 10px; font-size: 14px; }
+        .duvida { background: #ffcc00; color: #1a1a1a; } /* Amarelo */
+        
+        /* Seção das Placas */
+        #dicionario { display: none; margin-top: 30px; text-align: left; background: #333; padding: 20px; border-radius: 20px; }
+        .placa-item { display: flex; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .placa-img { width: 60px; margin-right: 15px; }
+        .placa-info b { color: #ffcc00; display: block; font-size: 16px; }
+        .placa-info p { margin: 5px 0; font-size: 13px; color: #ddd; }
     </style>
 </head>
 <body>
@@ -27,37 +31,63 @@
     <h1>🚨 Emergência Transital</h1>
 
     <div class="grid">
-        <!-- BOTÃO ACIDENTE -->
         <a href="tel:191" class="btn emergencia">
-            <span class="icon-grande">📞</span> ACIDENTE (Ligar 191)
-            <span class="sub">Polícia Rodoviária</span>
+            <span>📞</span> ACIDENTE (Ligar 191)
         </a>
 
-        <!-- BOTÃO WHATSAPP LOCALIZAÇÃO -->
-        <a href="https://api.whatsapp.com de ajuda no trânsito! Minha localização: " target="_blank" class="btn zap">
-            <span class="icon-grande">🟢</span> ENVIAR LOCALIZAÇÃO
-            <span class="sub">Avisar família pelo WhatsApp</span>
+        <a href="#" id="btn-zap" class="btn zap">
+            <span>🟢</span> ENVIAR LOCALIZAÇÃO
         </a>
 
-        <!-- INSTRUÇÕES DE SEGURANÇA -->
-        <div class="info">
-            <strong style="color: #ffcc00; display: block; margin-bottom: 10px;">⚠️ O QUE FAZER AGORA?</strong>
-            <ul>
-                <li>✅ <b>Sinalize:</b> Coloque o triângulo a pelo menos 30 passos largos do carro.</li>
-                <li>✅ <b>Segurança:</b> Saia do veículo e fique atrás da barreira de proteção (guardrail).</li>
-                <li>✅ <b>Visibilidade:</b> Se for noite, ligue o pisca-alerta imediatamente.</li>
-            </ul>
+        <!-- NOVO BOTÃO DE DUVIDA -->
+        <button class="btn duvida" onclick="toggleDicionario()">
+            <span>❓</span> QUE PLACA É ESTA?
+        </button>
+    </div>
+
+    <!-- SEÇÃO DICIONÁRIO (Invisível até clicar) -->
+    <div id="dicionario">
+        <h2 style="color: #ffcc00; text-align: center;">Dicionário de Placas</h2>
+        
+        <div class="placa-item">
+            <img src="https://upload.wikimedia.org" class="placa-img">
+            <div class="placa-info">
+                <b>R-1: PARADA OBRIGATÓRIA</b>
+                <p>Você deve parar totalmente o veículo antes de prosseguir.</p>
+            </div>
         </div>
+
+        <div class="placa-item">
+            <img src="https://upload.wikimedia.org" class="placa-img">
+            <div class="placa-info">
+                <b>A-32b: PEDESTRES</b>
+                <p>Passagem sinalizada de pedestres à frente. Reduza a velocidade.</p>
+            </div>
+        </div>
+
+        <div class="placa-item">
+            <img src="https://upload.wikimedia.org" class="placa-img">
+            <div class="placa-info">
+                <b>A-24: OBRAS</b>
+                <p>Atenção! Homens ou máquinas trabalhando na pista adiante.</p>
+            </div>
+        </div>
+
+        <button class="btn" style="background: #555; width: 100%;" onclick="toggleDicionario()">FECHAR</button>
     </div>
 
     <script>
-        // Função para tentar pegar a localização e colocar no link do zap automaticamente
+        // Função para mostrar/esconder o dicionário
+        function toggleDicionario() {
+            const dic = document.getElementById('dicionario');
+            dic.style.display = (dic.style.display === 'block') ? 'none' : 'block';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        // Função Localização WhatsApp
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                const linkZap = document.querySelector('.zap');
-                linkZap.href = `https://api.whatsapp.com de ajuda no trânsito! Minha localização: https://www.google.com{lat},${lon}`;
+            navigator.geolocation.getCurrentPosition(function(p) {
+                document.getElementById('btn-zap').href = `https://api.whatsapp.com de ajuda no trânsito! Minha localização: https://www.google.com{p.coords.latitude},${p.coords.longitude}`;
             });
         }
     </script>
