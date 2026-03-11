@@ -2,125 +2,116 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Emergência Transital</title>
     <link rel="icon" href="icon.png" type="image/png">
     <script src="https://unpkg.com"></script>
     <style>
         :root { 
             --amarelo: #ffcc00; --vermelho: #ff4d4d; --verde: #2ecc71; 
-            --fundo: #1a1a1a; --card: #252525; --texto: #ffffff;
-            --sombra: 8px 8px 16px rgba(0,0,0,0.5), -4px -4px 12px rgba(255,255,255,0.05);
+            --fundo: #121212; --card: #1e1e1e; --texto: #ffffff;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background: var(--fundo); color: var(--texto); margin: 0; padding-bottom: 110px; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--fundo); color: var(--texto); margin: 0; padding-bottom: 100px; overflow-x: hidden; }
 
-        /* TELA DE LOADING */
-        #loading { position: fixed; width: 100%; height: 100%; background: var(--fundo); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: 0.5s; }
-        .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--amarelo); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* HEADER FIXO */
+        header { background: var(--amarelo); color: #000; padding: 15px; text-align: center; font-weight: 800; font-size: 18px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
-        header { background: var(--amarelo); color: #000; padding: 15px; text-align: center; font-weight: 800; font-size: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100; }
-
-        .page { display: none; padding: 20px; animation: slideIn 0.3s ease-out; }
+        .page { display: none; padding: 15px; animation: fadeIn 0.3s ease; }
         .active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* BOTÕES 3D */
-        .btn { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 700; color: white; text-decoration: none; margin-bottom: 15px; width: 100%; background: var(--card); box-shadow: var(--sombra); cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.96); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.5); }
+        /* BOTÕES DE EMERGÊNCIA AJUSTADOS */
+        .btn { 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            padding: 18px 10px; border: none; border-radius: 18px; font-size: 16px; font-weight: 700; 
+            color: white; text-decoration: none; margin-bottom: 12px; width: 100%;
+            background: var(--card); box-shadow: 6px 6px 12px rgba(0,0,0,0.4); cursor: pointer;
+            box-sizing: border-box; /* Garante que o padding não aumente o tamanho do botão */
+        }
+        .btn:active { transform: scale(0.97); }
         .emergencia { background: linear-gradient(145deg, #ff4d4d, #d90429); }
         .zap { background: linear-gradient(145deg, #2ecc71, #27ae60); }
 
-        /* CARDS DE OCORRÊNCIAS */
-        .card-ocorrencia { background: var(--card); border-radius: 20px; overflow: hidden; margin-bottom: 20px; box-shadow: var(--sombra); border: 1px solid #333; }
-        .card-img { width: 100%; height: 150px; object-fit: cover; background: #444; }
-        .card-content { padding: 15px; }
-        .card-title { color: var(--amarelo); font-weight: bold; font-size: 18px; margin-bottom: 5px; display: block; }
-        .card-text { font-size: 14px; color: #ccc; line-height: 1.4; }
-        .tag { display: inline-block; padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
-        .tag-perigo { background: #d90429; color: white; }
-        .tag-atencao { background: var(--amarelo); color: black; }
+        /* OCORRÊNCIAS COMPACTAS */
+        .card-ocorrencia { background: var(--card); border-radius: 20px; overflow: hidden; margin-bottom: 15px; border: 1px solid #333; }
+        .card-img { width: 100%; height: 120px; object-fit: cover; }
+        .card-content { padding: 12px; }
+        .card-title { color: var(--amarelo); font-weight: bold; font-size: 16px; }
+        .card-text { font-size: 13px; color: #ccc; margin: 5px 0; }
 
-        /* MENU INFERIOR */
-        nav { position: fixed; bottom: 15px; left: 15px; right: 15px; background: rgba(35, 35, 35, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 100; }
-        nav button { background: none; border: none; color: #666; font-size: 10px; font-weight: bold; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
-        nav button.active-nav { color: var(--amarelo); transform: translateY(-3px); }
-        .nav-icon { font-size: 22px; margin-bottom: 3px; }
+        /* SCANNER */
+        #reader { width: 100% !important; border-radius: 15px; overflow: hidden; background: #000; }
+
+        /* MENU INFERIOR FIXO */
+        nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: #1a1a1a; display: flex; justify-content: space-around; 
+            padding: 10px 0; border-top: 1px solid #333; z-index: 1000;
+        }
+        nav button { background: none; border: none; color: #666; font-size: 11px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        nav button.active-nav { color: var(--amarelo); }
+        .nav-icon { font-size: 24px; margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
-    <div id="loading"><div class="spinner"></div><p style="margin-top:20px; color:var(--amarelo); font-weight:bold;">Emergência Transital...</p></div>
-
     <header>EMERGÊNCIA TRANSITAL</header>
 
-    <!-- PÁGINA HOME -->
+    <!-- INÍCIO -->
     <div id="home" class="page active">
         <a href="tel:191" class="btn emergencia"><span>📞</span> POLÍCIA (191)</a>
         <a href="tel:193" class="btn emergencia" style="background: #b91c1c;"><span>🚑</span> BOMBEIROS (193)</a>
-        <button onclick="enviarZap()" class="btn zap"><span>📍</span> ENVIAR LOCALIZAÇÃO</button>
+        <button onclick="enviarZap()" class="btn zap"><span>📍</span> LOCALIZAÇÃO ZAP</button>
         <button class="btn" style="background:#fff; color:#000;" onclick="toggleLanterna()" id="btn-lanterna"><span>🔦</span> SINALIZAR LOCAL</button>
     </div>
 
-    <!-- PÁGINA OCORRÊNCIAS (NOVA) -->
+    <!-- OCORRÊNCIAS -->
     <div id="ocorrencias" class="page">
-        <h2 style="text-align:center; color:var(--amarelo);">Guia de Ocorrências</h2>
-        
+        <h3 style="text-align:center; color:var(--amarelo);">Guia Rápido</h3>
         <div class="card-ocorrencia">
-            <img src="https://images.unsplash.com" class="card-img" alt="Acidente">
+            <img src="https://images.unsplash.com" class="card-img">
             <div class="card-content">
-                <span class="tag tag-perigo">Crítico</span>
-                <span class="card-title">Acidente na Pista</span>
-                <p class="card-text">Ligue o pisca-alerta. Coloque o triângulo a 30m. Não remova vítimas se houver suspeita de fratura.</p>
+                <span class="card-title">Acidente</span>
+                <p class="card-text">Ligue o pisca-alerta e coloque o triângulo a 30m.</p>
             </div>
         </div>
-
         <div class="card-ocorrencia">
-            <img src="https://images.unsplash.com" class="card-img" alt="Obras">
+            <img src="https://images.unsplash.com" class="card-img">
             <div class="card-content">
-                <span class="tag tag-atencao">Alerta</span>
-                <span class="card-title">Obras e Bloqueios</span>
-                <p class="card-text">Reduza a velocidade gradualmente. Siga os cones e a sinalização dos operários (bandeirinhas).</p>
-            </div>
-        </div>
-
-        <div class="card-ocorrencia">
-            <img src="https://images.unsplash.com" class="card-img" alt="Animal">
-            <div class="card-content">
-                <span class="tag tag-atencao">Alerta</span>
-                <span class="card-title">Animais na Via</span>
-                <p class="card-text">NUNCA buzine ou jogue luz alta. Reduza a velocidade e passe por trás do animal em velocidade mínima.</p>
+                <span class="card-title">Obras</span>
+                <p class="card-text">Reduza a velocidade e siga os cones.</p>
             </div>
         </div>
     </div>
 
-    <!-- PÁGINA SCANNER -->
+    <!-- SCANNER -->
     <div id="scan" class="page">
-        <h2 style="text-align:center;">Scanner de Placas</h2>
-        <div id="reader" style="width:100%; border-radius:20px; overflow:hidden; border:2px solid var(--amarelo);"></div>
-        <div id="res-scan" style="display:none; padding:20px; background:#333; border-radius:15px; margin-top:15px;">
-            <h3 id="pl-nome" style="color:var(--amarelo);"></h3>
-            <p id="pl-desc"></p>
-            <button class="btn" onclick="restartScan()">NOVO SCAN</button>
+        <h3 style="text-align:center;">Scanner de Placas</h3>
+        <div id="reader"></div>
+        <div id="res-scan" style="display:none; padding:15px; background:#333; border-radius:15px; margin-top:10px;">
+            <h4 id="pl-nome" style="color:var(--amarelo); margin:0;"></h4>
+            <p id="pl-desc" style="font-size:14px;"></p>
+            <button class="btn" onclick="restartScan()" style="margin-top:10px; padding:10px;">SCANNER NOVAMENTE</button>
         </div>
     </div>
 
     <nav>
         <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
-        <button onclick="showPage('ocorrencias', this)"><span class="nav-icon">🚧</span>Ocorrências</button>
+        <button onclick="showPage('ocorrencias', this)"><span class="nav-icon">🚧</span>Guia</button>
         <button onclick="showPage('scan', this)"><span class="nav-icon">📷</span>Scanner</button>
     </nav>
 
     <script>
-        window.onload = () => { setTimeout(() => { document.getElementById('loading').style.opacity='0'; setTimeout(()=>document.getElementById('loading').style.display='none',500); }, 1000); };
         let lat, lon;
         if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(p => { lat = p.coords.latitude; lon = p.coords.longitude; }); }
+        
         function enviarZap() {
             let msg = "Preciso de ajuda no trânsito!";
             if (lat && lon) msg += ` Local: https://www.google.com{lat},${lon}`;
             window.location.href = "https://wa.me" + encodeURIComponent(msg);
         }
+
         function showPage(pId, b) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pId).classList.add('active');
@@ -128,30 +119,41 @@
             b.classList.add('active-nav');
             if(pId === 'scan') { startScan(); } else { stopScan(); }
         }
+
         let lInt, pisc = false;
         function toggleLanterna() {
             const b = document.getElementById('btn-lanterna');
             if (!pisc) {
                 pisc = true; b.innerHTML = "<span>🛑</span> PARAR";
-                lInt = setInterval(() => { document.body.style.background = document.body.style.background === 'red' ? 'white' : '#1a1a1a'; }, 300);
+                lInt = setInterval(() => { document.body.style.background = document.body.style.background === 'red' ? 'white' : '#121212'; }, 300);
             } else {
-                pisc = false; clearInterval(lInt); document.body.style.background = "#1a1a1a"; b.innerHTML = "<span>🔦</span> SINALIZAR LOCAL";
+                pisc = false; clearInterval(lInt); document.body.style.background = "#121212"; b.innerHTML = "<span>🔦</span> SINALIZAR LOCAL";
             }
         }
+
         let scanner;
         function startScan() {
-            scanner = new Html5Qrcode("reader");
-            scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (txt) => {
-                document.getElementById('reader').style.display = 'none';
-                document.getElementById('res-scan').style.display = 'block';
-                const n = document.getElementById('pl-nome'); const d = document.getElementById('pl-desc');
-                if(txt.toLowerCase().includes("pare")) { n.innerText = "🛑 PARE"; d.innerText = "Parada obrigatória."; }
-                else { n.innerText = "Identificado"; d.innerText = txt; }
-                scanner.stop();
-            }).catch(e => console.log(e));
+            // Pequeno delay para garantir que a página carregou
+            setTimeout(() => {
+                scanner = new Html5Qrcode("reader");
+                const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+                scanner.start({ facingMode: "environment" }, config, (txt) => {
+                    document.getElementById('reader').style.display = 'none';
+                    document.getElementById('res-scan').style.display = 'block';
+                    const n = document.getElementById('pl-nome');
+                    const d = document.getElementById('pl-desc');
+                    if(txt.toLowerCase().includes("pare")) { n.innerText = "🛑 PARE"; d.innerText = "Parada obrigatória."; }
+                    else { n.innerText = "Identificado"; d.innerText = txt; }
+                    scanner.stop();
+                }).catch(e => {
+                    alert("Erro na câmera: Por favor, dê permissão de acesso.");
+                    console.log(e);
+                });
+            }, 300);
         }
+
         function restartScan() { document.getElementById('reader').style.display = 'block'; document.getElementById('res-scan').style.display = 'none'; startScan(); }
-        function stopScan() { if(scanner) scanner.stop().catch(() => {}); }
+        function stopScan() { if(scanner) { scanner.stop().then(() => scanner.clear()).catch(e => console.log(e)); } }
     </script>
 </body>
 </html>
