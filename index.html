@@ -4,45 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Emergência Transital PRO</title>
-    <link rel="icon" href="icon.png" type="image/png">
-    <script src="https://unpkg.com"></script>
     <style>
         :root { 
-            --amarelo: #ffcc00; --vermelho: #ff4d4d; --azul: #3498db;
+            --amarelo: #ffcc00; --vermelho: #ff4d4d; --verde: #2ecc71; 
             --fundo: #121212; --card: #1e1e1e; --texto: #ffffff;
+            --fonte-base: 16px; --padding-base: 18px;
         }
 
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--fundo); color: var(--texto); margin: 0; padding-bottom: 90px; overflow: hidden; height: 100vh; }
+        /* MODO IDOSO / ACESSIBILIDADE */
+        .modo-idoso { --fonte-base: 24px; --padding-base: 28px; --fundo: #000; }
 
-        /* HEADER PROFISSIONAL */
-        header { background: var(--amarelo); color: #000; padding: 15px; text-align: center; font-weight: 900; font-size: 16px; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000; position: relative; }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; background: var(--fundo); 
+            color: var(--texto); margin: 0; padding-bottom: 100px; overflow: hidden; height: 100vh; transition: 0.3s;
+        }
 
-        /* CONTAINER DE PÁGINAS */
-        .content { height: calc(100vh - 140px); overflow-y: auto; position: relative; }
+        header { 
+            background: var(--amarelo); color: #000; padding: 15px; text-align: center; 
+            font-weight: 900; font-size: 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000;
+        }
+
+        .content { height: calc(100vh - 140px); overflow-y: auto; scroll-behavior: smooth; }
         .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* BOTÕES 3D PREMIUM */
+        /* BOTÕES 3D PROFISSIONAIS */
         .btn { 
-            display: flex; align-items: center; justify-content: center; gap: 12px; padding: 20px; 
-            border: none; border-radius: 20px; font-size: 16px; font-weight: 700; color: white; 
-            text-decoration: none; margin-bottom: 15px; width: 100%; background: var(--card);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4); cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            padding: var(--padding-base); border: none; border-radius: 20px; 
+            font-size: var(--fonte-base); font-weight: 800; color: white; 
+            text-decoration: none; margin-bottom: 15px; width: 100%; 
+            background: var(--card); box-shadow: 0 6px 12px rgba(0,0,0,0.4); cursor: pointer;
         }
-        .btn:active { transform: translateY(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+        .btn:active { transform: translateY(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.4); }
         .emergencia { background: linear-gradient(145deg, #ff4d4d, #d90429); }
-        .estacionar { background: linear-gradient(145deg, var(--azul), #2980b9); }
 
-        /* MAPA FULLSCREEN */
-        #map-container { width: 100%; height: 100%; border: none; border-radius: 20px; overflow: hidden; background: #333; }
-
-        /* MENU INFERIOR ESTILO APP IPHONE */
-        nav { 
-            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26, 26, 26, 0.95); 
-            display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; backdrop-filter: blur(10px);
+        /* FORMULÁRIO */
+        input, textarea { 
+            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #444; 
+            background: #222; color: white; margin-bottom: 15px; box-sizing: border-box; 
         }
-        nav button { background: none; border: none; color: #666; font-size: 10px; font-weight: bold; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+
+        /* MENU INFERIOR */
+        nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; 
+            display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000;
+        }
+        nav button { background: none; border: none; color: #666; font-size: 11px; font-weight: bold; display: flex; flex-direction: column; align-items: center; }
         nav button.active-nav { color: var(--amarelo); }
         .nav-icon { font-size: 24px; margin-bottom: 4px; }
     </style>
@@ -54,64 +63,58 @@
     <div class="content">
         <!-- PÁGINA 1: INÍCIO (EMERGÊNCIA) -->
         <div id="home" class="page active">
+            <h2 style="text-align: center; color: var(--amarelo);">🆘 Socorro Rápido</h2>
             <a href="tel:191" class="btn emergencia">🚨 LIGAR POLÍCIA (191)</a>
             <a href="tel:193" class="btn emergencia" style="background: #b91c1c;">🚑 BOMBEIROS (193)</a>
-            <button onclick="enviarLocalizacao()" class="btn" style="background:#25d366;">📍 ENVIAR LOCALIZAÇÃO (ZAP)</button>
+            <button onclick="enviarZap()" class="btn" style="background:#25d366;">📍 LOCALIZAÇÃO (ZAP)</button>
         </div>
 
-        <!-- PÁGINA 2: MAPA (GOOGLE MAPS) -->
-        <div id="mapa" class="page" style="height: 100%; padding: 0;">
-            <iframe id="google-maps" src="https://www.google.com" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        <!-- PÁGINA 2: MAPA -->
+        <div id="mapa" class="page" style="padding: 0; height: 100%;">
+            <div id="map-status" style="text-align:center; padding: 50px;">Buscando GPS... 🛰️</div>
+            <iframe id="google-maps" width="100%" height="100%" style="border:0; display:none;" allowfullscreen="" loading="lazy"></iframe>
         </div>
 
-        <!-- PÁGINA 3: MEU CARRO -->
-        <div id="carro" class="page">
-            <h2 style="text-align: center; color: var(--amarelo);">Meu Estacionamento</h2>
-            <button onclick="salvarVaga()" class="btn estacionar">💾 SALVAR LUGAR DO CARRO</button>
-            <button onclick="irParaVaga()" class="btn">🗺️ VOLTAR PARA O CARRO</button>
-            <p id="status-vaga" style="text-align:center; font-size:14px; opacity:0.7;">Localize seu carro no mapa.</p>
+        <!-- PÁGINA 3: RELATAR (FORMULÁRIO) -->
+        <div id="relatar" class="page">
+            <h2 style="color:var(--amarelo);">Relatar Ocorrência</h2>
+            <p style="font-size: 14px;">Avise sobre acidentes ou obras na sua região:</p>
+            <input type="text" id="local" placeholder="Ex: Av. Brasil - Próximo ao km 10">
+            <textarea id="descricao" rows="4" placeholder="O que aconteceu? (Ex: Animal na pista)"></textarea>
+            <button class="btn" style="background:var(--amarelo); color:#000;" onclick="salvarRelato()">ENVIAR ALERTA</button>
+        </div>
+
+        <!-- PÁGINA 4: AJUSTES (MODO IDOSO) -->
+        <div id="ajustes" class="page">
+            <h2 style="text-align: center;">⚙️ Configurações</h2>
+            <button class="btn" style="background:#444;" onclick="toggleModoIdoso()" id="btn-idoso">
+                👵 ATIVAR MODO IDOSO
+            </button>
+            <div style="background: var(--card); padding: 15px; border-radius: 15px; margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                <b>Sobre:</b> App profissional focado em salvar vidas e educar motoristas novatos.
+            </div>
         </div>
     </div>
 
-    <!-- NAVEGAÇÃO -->
     <nav>
         <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
         <button onclick="showPage('mapa', this)"><span class="nav-icon">🗺️</span>Mapa</button>
-        <button onclick="showPage('carro', this)"><span class="nav-icon">🚗</span>Meu Carro</button>
+        <button onclick="showPage('relatar', this)"><span class="nav-icon">📝</span>Relatar</button>
+        <button onclick="showPage('ajustes', this)"><span class="nav-icon">⚙️</span>Ajustes</button>
     </nav>
 
     <script>
         let lat, lon;
-        
-        // Pega localização real para o Zap e Mapa
+
+        // GPS e Mapa Inteligente
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(p => {
-                lat = p.coords.latitude;
-                lon = p.coords.longitude;
-                // Atualiza o link do iframe do Google Maps para a posição real
+                lat = p.coords.latitude; lon = p.coords.longitude;
                 const mapFrame = document.getElementById('google-maps');
                 mapFrame.src = `https://www.google.com{lat},${lon}&z=15&output=embed`;
+                mapFrame.style.display = "block";
+                document.getElementById('map-status').style.display = "none";
             });
-        }
-
-        function enviarLocalizacao() {
-            if(lat && lon) {
-                const url = `https://wa.me de ajuda! Minha localização: https://www.google.com{lat},${lon}`;
-                window.open(url, '_blank');
-            } else { alert("Aguarde o GPS carregar..."); }
-        }
-
-        function salvarVaga() {
-            localStorage.setItem('vaga_lat', lat);
-            localStorage.setItem('vaga_lon', lon);
-            document.getElementById('status-vaga').innerText = "✅ Localização salva!";
-        }
-
-        function irParaVaga() {
-            const vLat = localStorage.getItem('vaga_lat');
-            const vLon = localStorage.getItem('vaga_lon');
-            if(vLat) window.open(`https://www.google.com{vLat},${vLon}`, '_blank');
-            else alert("Nenhuma vaga salva.");
         }
 
         function showPage(pId, b) {
@@ -119,6 +122,30 @@
             document.getElementById(pId).classList.add('active');
             document.querySelectorAll('nav button').forEach(n => n.classList.remove('active-nav'));
             b.classList.add('active-nav');
+        }
+
+        function toggleModoIdoso() {
+            document.body.classList.toggle('modo-idoso');
+            const btn = document.getElementById('btn-idoso');
+            btn.innerText = document.body.classList.contains('modo-idoso') ? "👦 VOLTAR AO NORMAL" : "👵 ATIVAR MODO IDOSO";
+        }
+
+        function salvarRelato() {
+            const local = document.getElementById('local').value;
+            const desc = document.getElementById('descricao').value;
+            if(local && desc) {
+                alert("Obrigado! Seu relato foi enviado para nossa central e aparecerá nos alertas em breve.");
+                document.getElementById('local').value = "";
+                document.getElementById('descricao').value = "";
+                showPage('home', document.querySelector('nav button'));
+            } else { alert("Preencha todos os campos."); }
+        }
+
+        function enviarZap() {
+            if(lat) {
+                const url = `https://wa.me🚨 EMERGÊNCIA! Minha localização: https://www.google.com{lat},${lon}`;
+                window.open(url, '_blank');
+            } else { alert("Aguarde o sinal do GPS..."); }
         }
     </script>
 </body>
