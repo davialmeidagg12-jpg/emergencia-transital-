@@ -4,35 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergência Transital</title>
+    <link rel="icon" href="icon.png" type="image/png">
     <style>
-        body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 20px; text-align: center; }
-        h1 { color: #333; font-size: 28px; }
-        .grid { display: grid; gap: 20px; margin-top: 30px; }
-        .btn { padding: 30px; border: none; border-radius: 20px; font-size: 22px; font-weight: bold; color: white; cursor: pointer; box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
-        .emergencia { background: #e63946; } /* Vermelho */
-        .obras { background: #f4a261; }      /* Laranja */
-        .animais { background: #8d6e63; }    /* Marrom */
-        .ajuda { background: #457b9d; }      /* Azul */
-        span { display: block; font-size: 40px; margin-bottom: 10px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: white; margin: 0; padding: 20px; text-align: center; }
+        h1 { color: #ffcc00; font-size: 24px; margin-bottom: 5px; }
+        p { color: #ccc; font-size: 14px; margin-bottom: 25px; }
+        .grid { display: grid; gap: 15px; }
+        
+        /* Botões Gigantes para Acessibilidade */
+        .btn { 
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            padding: 25px; border: none; border-radius: 20px; font-size: 20px; font-weight: bold; 
+            color: white; cursor: pointer; text-decoration: none; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn:active { transform: scale(0.95); }
+        
+        .emergencia { background: #e63946; } /* Polícia/Bombeiros */
+        .obras { background: #f4a261; }      /* Sinalização */
+        .animais { background: #8d6e63; }    /* Cuidado */
+        .ajuda { background: #457b9d; }      /* Educação */
+
+        .icon-grande { font-size: 45px; margin-bottom: 10px; }
+        .subtexto { font-size: 12px; font-weight: normal; opacity: 0.9; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <h1>Emergência Transital</h1>
-    <p>Toque no problema para saber o que fazer:</p>
+
+    <h1>🚨 Emergência Transital</h1>
+    <p>Toque rápido para ajuda imediata:</p>
 
     <div class="grid">
-        <button class="btn emergencia" onclick="alert('ACIDENTE: Ligue 191 (PRF) ou 193 (Bombeiros). Sinalize a via a 30 metros!')">
-            <span>🚨</span> ACIDENTE
+        <!-- BOTÃO ACIDENTE: Liga para a Polícia Rodoviária Federal -->
+        <a href="tel:191" class="btn emergencia">
+            <span class="icon-grande">📞</span> 
+            ACIDENTE (Ligar 191)
+            <span class="subtexto">Chamar Polícia Rodoviária</span>
+        </a>
+
+        <!-- BOTÃO BOMBEIROS: Caso haja feridos -->
+        <a href="tel:193" class="btn emergencia" style="background: #b91c1c;">
+            <span class="icon-grande">🚑</span> 
+            FERIDOS (Ligar 193)
+            <span class="subtexto">Chamar Bombeiros/SAMU</span>
+        </a>
+
+        <button class="btn obras" onclick="alert('OBRAS: Reduza a velocidade, ligue o pisca-alerta e siga os cones.')">
+            <span class="icon-grande">🚧</span> 
+            OBRAS NA PISTA
         </button>
-        <button class="btn obras" onclick="alert('OBRAS: Reduza a velocidade e siga a sinalização dos cones.')">
-            <span>🚧</span> OBRAS NA PISTA
-        </button>
-        <button class="btn animais" onclick="alert('ANIMAIS: Não buzine! Reduza a velocidade e passe por trás do animal.')">
-            <span>🐾</span> ANIMAL NA VIA
-        </button>
-        <button class="btn ajuda" onclick="alert('DÚVIDA: Consulte o manual de placas no menu lateral.')">
-            <span>❓</span> NÃO CONHEÇO A PLACA
+
+        <button class="btn animais" onclick="alert('ANIMAL NA VIA: Não buzine nem jogue luz alta! Diminua e passe devagar.')">
+            <span class="icon-grande">🐾</span> 
+            ANIMAL NA VIA
         </button>
     </div>
+
 </body>
 </html>
