@@ -10,107 +10,102 @@
         :root { 
             --amarelo: #ffcc00; --vermelho: #ff4d4d; --verde: #2ecc71; 
             --fundo: #1a1a1a; --card: #252525; --texto: #ffffff;
-            --sombra-escura: rgba(0,0,0,0.5); --sombra-clara: rgba(255,255,255,0.05);
+            --sombra: 8px 8px 16px rgba(0,0,0,0.5), -4px -4px 12px rgba(255,255,255,0.05);
         }
-
-        .alto-contraste { --fundo: #000; --card: #111; }
 
         body { 
-            font-family: 'Poppins', sans-serif; background: var(--fundo); 
-            color: var(--texto); margin: 0; padding-bottom: 100px; transition: 0.4s; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--fundo); 
+            color: var(--texto); margin: 0; padding-bottom: 110px; overflow-x: hidden;
         }
 
-        /* Cabeçalho 3D Glass */
+        /* TELA DE CARREGAMENTO (LOADING) */
+        #loading {
+            position: fixed; width: 100%; height: 100%; background: var(--fundo);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 999; transition: 0.5s;
+        }
+        .spinner {
+            width: 60px; height: 60px; border: 6px solid #333; border-top: 6px solid var(--amarelo);
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360px); } }
+
+        /* HEADER 3D */
         header { 
-            background: rgba(255, 204, 0, 0.9); backdrop-filter: blur(10px);
-            color: #000; padding: 20px; text-align: center; 
-            font-weight: 800; font-size: 22px; position: sticky; top: 0; z-index: 100;
-            border-bottom: 3px solid rgba(0,0,0,0.1);
-            box-shadow: 0 4px 20px var(--sombra-escura);
+            background: var(--amarelo); color: #000; padding: 20px; text-align: center; 
+            font-weight: 800; font-size: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        .page { display: none; padding: 25px; animation: slideUp 0.5s ease; }
+        .page { display: none; padding: 20px; animation: slideIn 0.4s ease-out; }
         .active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        /* Botões 3D Reais */
+        /* BOTÕES NEUMÓRFICOS 3D */
         .btn { 
             display: flex; align-items: center; justify-content: center; gap: 15px; 
-            padding: 22px; border: none; border-radius: 24px; 
-            font-size: 18px; font-weight: 700; color: white; 
-            text-decoration: none; margin-bottom: 20px; width: 100%; box-sizing: border-box;
-            position: relative; cursor: pointer;
-            background: var(--card);
-            box-shadow: 8px 8px 16px var(--sombra-escura), -4px -4px 12px var(--sombra-clara);
-            transition: 0.2s ease;
+            padding: 22px; border: none; border-radius: 24px; font-size: 18px; font-weight: 700; 
+            color: white; text-decoration: none; margin-bottom: 20px; width: 100%;
+            background: var(--card); box-shadow: var(--sombra); transition: 0.2s; cursor: pointer;
         }
-
-        .btn:active { 
-            transform: scale(0.96);
-            box-shadow: inset 6px 6px 12px var(--sombra-escura), inset -4px -4px 10px var(--sombra-clara);
-        }
+        .btn:active { transform: scale(0.96); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.5); }
         
-        .emergencia { background: linear-gradient(145deg, #ff4d4d, #d90429); border: 2px solid #ff6666; }
-        .zap { background: linear-gradient(145deg, #2ecc71, #27ae60); border: 2px solid #55efc4; }
-        .camera-btn { background: linear-gradient(145deg, #3498db, #2980b9); border: 2px solid #74b9ff; }
-        .lanterna-btn { background: #ffffff; color: #000; border: 3px solid var(--amarelo); }
+        .emergencia { background: linear-gradient(145deg, #ff4d4d, #d90429); }
+        .zap { background: linear-gradient(145deg, #2ecc71, #27ae60); }
+        .lanterna-btn { background: #fff; color: #000; border: 2px solid var(--amarelo); }
 
-        /* Cards Informativos 3D */
-        .card-info {
-            background: var(--card); padding: 20px; border-radius: 25px;
-            box-shadow: inset 2px 2px 5px var(--sombra-clara), 5px 5px 15px var(--sombra-escura);
-            margin-top: 20px; border: 1px solid #333;
-        }
-
-        /* Menu Inferior 3D Glass */
+        /* MENU INFERIOR GLASS */
         nav { 
             position: fixed; bottom: 15px; left: 15px; right: 15px;
-            background: rgba(30, 30, 30, 0.8); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-around; padding: 15px 0; 
-            border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            background: rgba(40, 40, 40, 0.9); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around; padding: 12px; 
+            border-radius: 25px; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7); z-index: 100;
         }
-        nav button { background: none; border: none; color: #666; font-size: 11px; font-weight: bold; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
-        nav button.active-nav { color: var(--amarelo); transform: translateY(-5px); }
-        .nav-icon { font-size: 24px; margin-bottom: 5px; }
+        nav button { background: none; border: none; color: #777; font-size: 11px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        nav button.active-nav { color: var(--amarelo); transform: translateY(-3px); }
+        .nav-icon { font-size: 24px; margin-bottom: 3px; }
 
-        /* Câmera */
-        #reader { width: 100%; border-radius: 25px; overflow: hidden; border: 4px solid var(--amarelo); box-shadow: 0 10px 20px var(--sombra-escura); }
+        #reader { width: 100%; border-radius: 20px; overflow: hidden; border: 3px solid var(--amarelo); }
     </style>
 </head>
 <body>
 
+    <!-- LOADING SCREEN -->
+    <div id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; font-weight: bold; color: var(--amarelo);">Iniciando Emergência Transital...</p>
+    </div>
+
     <header>EMERGÊNCIA TRANSITAL</header>
 
     <div id="home" class="page active">
-        <h3 style="text-align: center; color: var(--amarelo); letter-spacing: 1px;">CENTRAL DE SOCORRO</h3>
+        <h3 style="text-align: center; color: var(--amarelo);">CENTRAL DE AUXÍLIO</h3>
         <a href="tel:191" class="btn emergencia"><span>📞</span> POLÍCIA (191)</a>
-        <a href="tel:193" class="btn emergencia" style="background: linear-gradient(145deg, #c0392b, #8e44ad);"><span>🚑</span> BOMBEIROS (193)</a>
-        <a href="#" id="btn-zap" class="btn zap"><span>📍</span> LOCALIZAÇÃO ZAP</a>
+        <a href="tel:193" class="btn emergencia" style="background: #b91c1c;"><span>🚑</span> BOMBEIROS (193)</a>
+        
+        <!-- BOTÃO WHATSAPP CORRIGIDO -->
+        <button onclick="enviarZap()" class="btn zap">
+            <span>📍</span> ENVIAR LOCALIZAÇÃO
+        </button>
+
         <button class="btn lanterna-btn" onclick="toggleLanterna()" id="btn-lanterna"><span>🔦</span> SINALIZAR LOCAL</button>
     </div>
 
     <div id="scan" class="page">
-        <h2 style="text-align: center;">SCANNER DE PLACAS</h2>
+        <h2 style="text-align: center;">SCANNER</h2>
         <div id="reader"></div>
-        <div id="res-scan" class="card-info" style="display: none;">
-            <h3 id="pl-nome" style="color:var(--amarelo); margin:0;"></h3>
-            <p id="pl-desc" style="font-size: 16px; margin: 15px 0;"></p>
-            <button class="btn" style="background:#444;" onclick="restartScan()">ESCANEAR NOVAMENTE</button>
+        <div id="res-scan" style="display:none; background:#333; padding:20px; border-radius:20px; margin-top:10px;">
+            <h3 id="pl-nome" style="color:var(--amarelo);"></h3>
+            <p id="pl-desc"></p>
+            <button class="btn" onclick="restartScan()">NOVO SCAN</button>
         </div>
     </div>
 
     <div id="config" class="page">
         <h2 style="text-align: center;">AJUSTES</h2>
-        <div class="card-info">
-            <p style="margin-top:0;">Melhorar para Idosos:</p>
-            <button class="btn" style="background:#444;" onclick="toggleAcessibilidade()" id="btn-acc">
-                <span>👁️</span> LETRAS GRANDES: OFF
-            </button>
-        </div>
-        <div class="card-info" style="font-size: 14px; opacity: 0.8;">
-            <b>Missão:</b> Garantir segurança para motoristas novatos e idosos através da tecnologia.
-        </div>
+        <button class="btn" style="background:#444;" onclick="document.body.classList.toggle('alto-contraste')">
+            <span>👁️</span> ALTERAR CONTRASTE
+        </button>
     </div>
 
     <nav>
@@ -120,6 +115,29 @@
     </nav>
 
     <script>
+        // Remove tela de loading após carregar
+        window.onload = () => { setTimeout(() => { document.getElementById('loading').style.opacity = '0'; setTimeout(() => { document.getElementById('loading').style.display = 'none'; }, 500); }, 1500); };
+
+        let userLat, userLon;
+
+        // Pega localização assim que abre
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(p => {
+                userLat = p.coords.latitude;
+                userLon = p.coords.longitude;
+            });
+        }
+
+        // Função de Zap que evita o erro de aba preta
+        function enviarZap() {
+            let msg = "Preciso de ajuda no trânsito!";
+            if (userLat && userLon) {
+                msg += ` Minha localização: https://www.google.com{userLat},${userLon}`;
+            }
+            const url = "https://wa.me" + encodeURIComponent(msg);
+            window.location.href = url; // Usa a mesma aba para não ser bloqueado
+        }
+
         function showPage(pId, b) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pId).classList.add('active');
@@ -128,20 +146,14 @@
             if(pId === 'scan') { startScan(); } else { stopScan(); }
         }
 
-        function toggleAcessibilidade() {
-            document.body.classList.toggle('alto-contraste');
-            const btn = document.getElementById('btn-acc');
-            btn.innerText = document.body.classList.contains('alto-contraste') ? "👁️ LETRAS GRANDES: ON" : "👁️ LETRAS GRANDES: OFF";
-        }
-
         let lInt; let pisc = false;
         function toggleLanterna() {
             const b = document.getElementById('btn-lanterna');
             if (!pisc) {
                 pisc = true; b.innerHTML = "<span>🛑</span> PARAR";
-                lInt = setInterval(() => { document.body.style.background = document.body.style.background === 'red' ? 'white' : 'black'; }, 300);
+                lInt = setInterval(() => { document.body.style.background = document.body.style.background === 'red' ? 'white' : '#1a1a1a'; }, 300);
             } else {
-                pisc = false; clearInterval(lInt); document.body.style.background = "";
+                pisc = false; clearInterval(lInt); document.body.style.background = "#1a1a1a";
                 b.innerHTML = "<span>🔦</span> SINALIZAR LOCAL";
             }
         }
@@ -154,21 +166,13 @@
                 document.getElementById('res-scan').style.display = 'block';
                 const n = document.getElementById('pl-nome');
                 const d = document.getElementById('pl-desc');
-                
-                if(txt.toLowerCase().includes("pare")) { n.innerText = "🛑 PARE"; d.innerText = "Parada obrigatória. Pare totalmente o veículo."; }
-                else if(txt.toLowerCase().includes("obras")) { n.innerText = "🚧 OBRAS"; d.innerText = "Atenção! Máquinas e operários na pista."; }
-                else { n.innerText = "Lido com Sucesso"; d.innerText = txt; }
+                if(txt.toLowerCase().includes("pare")) { n.innerText = "🛑 PARE"; d.innerText = "Parada obrigatória."; }
+                else { n.innerText = "Identificado"; d.innerText = txt; }
                 scanner.stop();
             }).catch(e => console.log(e));
         }
         function restartScan() { document.getElementById('reader').style.display = 'block'; document.getElementById('res-scan').style.display = 'none'; startScan(); }
         function stopScan() { if(scanner) scanner.stop().catch(() => {}); }
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(p => {
-                document.getElementById('btn-zap').href = `https://api.whatsapp.com! Minha localização: https://www.google.com{p.coords.latitude},${p.coords.longitude}`;
-            });
-        }
     </script>
 </body>
 </html>
