@@ -4,125 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergência Transital</title>
-    <link rel="icon" href="icon.png" type="image/png">
+    <!-- Biblioteca do Leitor de QR Code -->
+    <script src="https://unpkg.com"></script>
     <style>
         :root { --amarelo: #ffcc00; --vermelho: #d90429; --verde: #25d366; --fundo: #121212; --card: #1e1e1e; }
-        body { font-family: sans-serif; background: var(--fundo); color: white; margin: 0; padding: 0; padding-bottom: 80px; }
+        body { font-family: sans-serif; background: var(--fundo); color: white; margin: 0; padding-bottom: 80px; }
+        header { background: var(--amarelo); color: black; padding: 15px; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 100; }
         
-        /* Cabeçalho */
-        header { background: var(--amarelo); color: black; padding: 15px; text-align: center; font-weight: bold; font-size: 20px; position: sticky; top: 0; z-index: 100; }
-
-        /* Container das Páginas */
         .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Botões e Cards */
         .btn { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 20px; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; color: white; text-decoration: none; margin-bottom: 15px; width: 100%; box-sizing: border-box; }
         .emergencia { background: var(--vermelho); }
         .zap { background: var(--verde); }
-        .card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid var(--amarelo); text-align: left; }
 
-        /* Menu Inferior (Navigation Bar) */
+        /* Estilo da Câmera */
+        #reader { width: 100%; border-radius: 15px; overflow: hidden; margin-top: 10px; background: #000; }
+        #resultado-scan { margin-top: 20px; padding: 15px; background: var(--card); border-radius: 10px; border: 2px solid var(--amarelo); display: none; }
+
         nav { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; }
-        nav button { background: none; border: none; color: #888; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        nav button { background: none; border: none; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
         nav button.active-nav { color: var(--amarelo); }
-        .nav-icon { font-size: 24px; margin-bottom: 4px; }
-
-        /* Dicionário de Placas */
-        .placa-box { display: flex; align-items: center; background: #2a2a2a; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
-        .placa-img { width: 50px; margin-right: 15px; }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-    <header id="titulo-app">Emergência Transital</header>
+    <header>Emergência Transital</header>
 
-    <!-- PÁGINA 1: HOME (EMERGÊNCIA) -->
+    <!-- PÁGINA 1: HOME -->
     <div id="home" class="page active">
-        <h2 style="text-align: center;">Socorro Imediato</h2>
         <a href="tel:191" class="btn emergencia"><span>📞</span> LIGAR POLÍCIA (191)</a>
-        <a href="tel:193" class="btn emergencia" style="background:#b91c1c;"><span>🚑</span> BOMBEIROS (193)</a>
         <a href="#" id="btn-zap" class="btn zap"><span>📍</span> ENVIAR LOCALIZAÇÃO</a>
-        <button class="btn" style="background:#fff; color:#000;" onclick="toggleLanterna()" id="btn-lanterna"><span>🔦</span> SINALIZADOR NOTURNO</button>
     </div>
 
-    <!-- PÁGINA 2: EDUCAÇÃO (PLACAS) -->
-    <div id="educacao" class="page">
-        <h2 style="text-align: center;">Dicionário de Placas</h2>
-        <div class="placa-box">
-            <img src="https://upload.wikimedia.org" class="placa-img">
-            <div><b>PARE</b><p style="margin:0; font-size:12px;">Parada obrigatória total.</p></div>
-        </div>
-        <div class="placa-box">
-            <img src="https://upload.wikimedia.org" class="placa-img">
-            <div><b>OBRAS</b><p style="margin:0; font-size:12px;">Atenção a operários na pista.</p></div>
+    <!-- PÁGINA 2: LEITOR QR (IA DE PLACAS) -->
+    <div id="scan" class="page">
+        <h2 style="text-align: center;">Identificar Placa</h2>
+        <p style="font-size: 14px; text-align: center;">Aponte a câmera para o QR Code da placa para saber o significado.</p>
+        <div id="reader"></div>
+        <div id="resultado-scan">
+            <h3 id="placa-nome" style="color:var(--amarelo); margin-top:0;"></h3>
+            <p id="placa-desc"></p>
+            <button onclick="reiniciarScanner()" style="background:var(--amarelo); border:none; padding:10px; border-radius:5px; font-weight:bold;">Escanear Outra</button>
         </div>
     </div>
 
-    <!-- PÁGINA 3: CHECKLIST (SEGURANÇA) -->
+    <!-- PÁGINA 3: CHECKLIST -->
     <div id="checklist" class="page">
-        <h2 style="text-align: center;">Antes de Dirigir</h2>
-        <div class="card">✅ <b>Pneus:</b> Verifique a calibração e o estepe.</div>
-        <div class="card">✅ <b>Luzes:</b> Teste setas, faróis e luz de freio.</div>
-        <div class="card">✅ <b>Água e Óleo:</b> Confira os níveis no motor.</div>
-        <div class="card">✅ <b>Documentos:</b> CNH e CRLV em dia?</div>
+        <h2>Checklist de Segurança</h2>
+        <div style="background:#1e1e1e; padding:15px; border-radius:10px; margin-bottom:10px;">✅ Conferir Pneus e Estepe</div>
+        <div style="background:#1e1e1e; padding:15px; border-radius:10px; margin-bottom:10px;">✅ Verificar Nível de Óleo</div>
     </div>
 
-    <!-- PÁGINA 4: SOBRE -->
-    <div id="sobre" class="page">
-        <h2 style="text-align: center;">Sobre o Projeto</h2>
-        <p>O <b>Emergência Transital</b> foi criado para apoiar motoristas novatos e idosos, garantindo que ninguém se sinta perdido no trânsito.</p>
-        <p>Dúvidas? Entre em contato com o suporte.</p>
-    </div>
-
-    <!-- MENU DE NAVEGAÇÃO -->
+    <!-- MENU -->
     <nav>
-        <button onclick="showPage('home', this)" class="active-nav">
-            <span class="nav-icon">🚨</span>Início
-        </button>
-        <button onclick="showPage('educacao', this)">
-            <span class="nav-icon">❓</span>Placas
-        </button>
-        <button onclick="showPage('checklist', this)">
-            <span class="nav-icon">📋</span>Checklist
-        </button>
-        <button onclick="showPage('sobre', this)">
-            <span class="nav-icon">ℹ️</span>Sobre
-        </button>
+        <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
+        <button onclick="showPage('scan', this)"><span class="nav-icon">📷</span>Câmera</button>
+        <button onclick="showPage('checklist', this)"><span class="nav-icon">📋</span>Checklist</button>
     </nav>
 
     <script>
-        // Troca de páginas
         function showPage(pageId, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
             btn.classList.add('active-nav');
-            window.scrollTo(0,0);
+            
+            // Inicia a câmera se for a página de scan
+            if(pageId === 'scan') { iniciarScanner(); } else { pararScanner(); }
         }
 
-        // Lanterna
-        let lanternaInterval;
-        let piscando = false;
-        function toggleLanterna() {
-            const btn = document.getElementById('btn-lanterna');
-            if (!piscando) {
-                piscando = true; btn.innerHTML = "<span>🛑</span> PARAR";
-                lanternaInterval = setInterval(() => {
-                    document.body.style.background = document.body.style.background === 'red' ? 'white' : '#121212';
-                }, 300);
+        let html5QrCode;
+
+        function iniciarScanner() {
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                (decodedText) => {
+                    document.getElementById('reader').style.display = 'none';
+                    document.getElementById('resultado-scan').style.display = 'block';
+                    // Aqui simulamos a IA processando o texto do QR Code
+                    processarResultado(decodedText);
+                    html5QrCode.stop();
+                }
+            ).catch(err => console.log("Erro na câmera", err));
+        }
+
+        function processarResultado(texto) {
+            const nome = document.getElementById('placa-nome');
+            const desc = document.getElementById('placa-desc');
+            
+            // Exemplo de como a "IA" vai ler os códigos
+            if(texto.toLowerCase().includes("pare")) {
+                nome.innerText = "🛑 R-1: Parada Obrigatória";
+                desc.innerText = "Você deve parar totalmente o veículo antes de entrar no cruzamento.";
+            } else if(texto.toLowerCase().includes("obras")) {
+                nome.innerText = "🚧 A-24: Obras";
+                desc.innerText = "Atenção! Existem homens ou máquinas trabalhando na pista adiante.";
             } else {
-                piscando = false; clearInterval(lanternaInterval);
-                document.body.style.background = '#121212';
-                btn.innerHTML = "<span>🔦</span> SINALIZADOR NOTURNO";
+                nome.innerText = "Placa Identificada";
+                desc.innerText = "Informação encontrada: " + texto;
             }
         }
 
-        // WhatsApp Localização
+        function reiniciarScanner() {
+            document.getElementById('reader').style.display = 'block';
+            document.getElementById('resultado-scan').style.display = 'none';
+            iniciarScanner();
+        }
+
+        function pararScanner() {
+            if(html5QrCode) { html5QrCode.stop().catch(() => {}); }
+        }
+
+        // Localização Zap
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(p => {
-                document.getElementById('btn-zap').href = `https://api.whatsapp.com de ajuda no trânsito! Localização: https://www.google.com{p.coords.latitude},${p.coords.longitude}`;
+                document.getElementById('btn-zap').href = `https://api.whatsapp.com! Minha localização: https://www.google.com{p.coords.latitude},${p.coords.longitude}`;
             });
         }
     </script>
