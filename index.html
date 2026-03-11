@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergência Transital</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 20px; text-align: center; }
+        h1 { color: #333; font-size: 28px; }
+        .grid { display: grid; gap: 20px; margin-top: 30px; }
+        .btn { padding: 30px; border: none; border-radius: 20px; font-size: 22px; font-weight: bold; color: white; cursor: pointer; box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
+        .emergencia { background: #e63946; } /* Vermelho */
+        .obras { background: #f4a261; }      /* Laranja */
+        .animais { background: #8d6e63; }    /* Marrom */
+        .ajuda { background: #457b9d; }      /* Azul */
+        span { display: block; font-size: 40px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Emergência Transital</h1>
+    <p>Toque no problema para saber o que fazer:</p>
+
+    <div class="grid">
+        <button class="btn emergencia" onclick="alert('ACIDENTE: Ligue 191 (PRF) ou 193 (Bombeiros). Sinalize a via a 30 metros!')">
+            <span>🚨</span> ACIDENTE
+        </button>
+        <button class="btn obras" onclick="alert('OBRAS: Reduza a velocidade e siga a sinalização dos cones.')">
+            <span>🚧</span> OBRAS NA PISTA
+        </button>
+        <button class="btn animais" onclick="alert('ANIMAIS: Não buzine! Reduza a velocidade e passe por trás do animal.')">
+            <span>🐾</span> ANIMAL NA VIA
+        </button>
+        <button class="btn ajuda" onclick="alert('DÚVIDA: Consulte o manual de placas no menu lateral.')">
+            <span>❓</span> NÃO CONHEÇO A PLACA
+        </button>
+    </div>
+</body>
+</html>
