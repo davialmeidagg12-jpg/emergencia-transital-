@@ -4,123 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergência Transital</title>
+    <link rel="icon" href="icon.png" type="image/png">
     <!-- Biblioteca do Leitor de QR Code -->
     <script src="https://unpkg.com"></script>
     <style>
-        :root { --amarelo: #ffcc00; --vermelho: #d90429; --verde: #25d366; --fundo: #121212; --card: #1e1e1e; }
-        body { font-family: sans-serif; background: var(--fundo); color: white; margin: 0; padding-bottom: 80px; }
-        header { background: var(--amarelo); color: black; padding: 15px; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 100; }
-        
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        :root { 
+            --amarelo: #ffcc00; --vermelho: #d90429; --verde: #25d366; 
+            --fundo: #121212; --card: #1e1e1e; --texto: #ffffff;
+            --tamanho-fonte: 18px; --padding-btn: 20px;
+        }
+
+        /* MODO ACESSIBILIDADE (Letras Maiores) */
+        .alto-contraste { 
+            --tamanho-fonte: 24px; --padding-btn: 30px; --fundo: #000000;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--fundo); 
+            color: var(--texto); margin: 0; padding-bottom: 90px; transition: 0.3s; 
+        }
+
+        header { 
+            background: var(--amarelo); color: #000; padding: 15px; text-align: center; 
+            font-weight: bold; font-size: 22px; position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .page { display: none; padding: 20px; animation: fadeIn 0.4s; }
         .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .btn { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 20px; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; color: white; text-decoration: none; margin-bottom: 15px; width: 100%; box-sizing: border-box; }
+        /* Botões Estilizados */
+        .btn { 
+            display: flex; align-items: center; justify-content: center; gap: 15px; 
+            padding: var(--padding-btn); border: none; border-radius: 20px; 
+            font-size: var(--tamanho-fonte); font-weight: bold; color: white; 
+            text-decoration: none; margin-bottom: 15px; width: 100%; box-sizing: border-box;
+            box-shadow: 0 6px 0 #800; transition: 0.1s; cursor: pointer;
+        }
+        .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #800; }
+        
         .emergencia { background: var(--vermelho); }
-        .zap { background: var(--verde); }
+        .zap { background: var(--verde); box-shadow: 0 6px 0 #157339; }
+        .camera-btn { background: #4361ee; box-shadow: 0 6px 0 #2b3a8c; }
+        .config-btn { background: #444; box-shadow: 0 6px 0 #222; }
 
-        /* Estilo da Câmera */
-        #reader { width: 100%; border-radius: 15px; overflow: hidden; margin-top: 10px; background: #000; }
-        #resultado-scan { margin-top: 20px; padding: 15px; background: var(--card); border-radius: 10px; border: 2px solid var(--amarelo); display: none; }
+        /* Câmera e Scanner */
+        #reader { width: 100%; border-radius: 20px; overflow: hidden; border: 3px solid var(--amarelo); margin-top: 15px; }
+        #res-scan { margin-top: 20px; padding: 20px; background: var(--card); border-radius: 15px; border: 2px solid var(--amarelo); display: none; }
 
-        nav { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; }
-        nav button { background: none; border: none; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
+        /* Navegação Inferior */
+        nav { 
+            position: fixed; bottom: 0; width: 100%; background: #1a1a1a; 
+            display: flex; justify-content: space-around; padding: 12px 0; 
+            border-top: 2px solid #333; box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+        }
+        nav button { background: none; border: none; color: #888; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
         nav button.active-nav { color: var(--amarelo); }
-        .nav-icon { font-size: 22px; margin-bottom: 4px; }
+        .nav-icon { font-size: 26px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
     <header>Emergência Transital</header>
 
-    <!-- PÁGINA 1: HOME -->
+    <!-- HOME: SOCORRO -->
     <div id="home" class="page active">
-        <a href="tel:191" class="btn emergencia"><span>📞</span> LIGAR POLÍCIA (191)</a>
+        <h2 style="text-align: center; color: var(--amarelo);">🆘 Ajuda Imediata</h2>
+        <a href="tel:191" class="btn emergencia"><span>📞</span> POLÍCIA (191)</a>
+        <a href="tel:193" class="btn emergencia" style="background:#b91c1c;"><span>🚑</span> BOMBEIROS (193)</a>
         <a href="#" id="btn-zap" class="btn zap"><span>📍</span> ENVIAR LOCALIZAÇÃO</a>
+        <button class="btn" style="background:#fff; color:#000; box-shadow: 0 6px 0 #ccc;" onclick="toggleLanterna()" id="btn-lanterna"><span>🔦</span> SINALIZAR LOCAL</button>
     </div>
 
-    <!-- PÁGINA 2: LEITOR QR (IA DE PLACAS) -->
+    <!-- SCANNER: IDENTIFICAR PLACA -->
     <div id="scan" class="page">
-        <h2 style="text-align: center;">Identificar Placa</h2>
-        <p style="font-size: 14px; text-align: center;">Aponte a câmera para o QR Code da placa para saber o significado.</p>
+        <h2 style="text-align: center;">📷 Leitor de Placas</h2>
+        <p style="text-align: center;">Aponte para o QR Code da placa:</p>
         <div id="reader"></div>
-        <div id="resultado-scan">
-            <h3 id="placa-nome" style="color:var(--amarelo); margin-top:0;"></h3>
-            <p id="placa-desc"></p>
-            <button onclick="reiniciarScanner()" style="background:var(--amarelo); border:none; padding:10px; border-radius:5px; font-weight:bold;">Escanear Outra</button>
+        <div id="res-scan">
+            <h3 id="pl-nome" style="color:var(--amarelo); margin:0;"></h3>
+            <p id="pl-desc" style="font-size: 18px; margin: 15px 0;"></p>
+            <button class="btn config-btn" onclick="restartScan()">Escanear Outra</button>
         </div>
     </div>
 
-    <!-- PÁGINA 3: CHECKLIST -->
-    <div id="checklist" class="page">
-        <h2>Checklist de Segurança</h2>
-        <div style="background:#1e1e1e; padding:15px; border-radius:10px; margin-bottom:10px;">✅ Conferir Pneus e Estepe</div>
-        <div style="background:#1e1e1e; padding:15px; border-radius:10px; margin-bottom:10px;">✅ Verificar Nível de Óleo</div>
+    <!-- CONFIGURAÇÕES: ACESSIBILIDADE -->
+    <div id="config" class="page">
+        <h2 style="text-align: center;">⚙️ Ajustes</h2>
+        <p>Melhore a visualização para idosos:</p>
+        <button class="btn config-btn" onclick="toggleAcessibilidade()" id="btn-acc">
+            <span>👁️</span> ATIVAR LETRAS GRANDES
+        </button>
+        <div style="background: #333; padding: 15px; border-radius: 15px; margin-top: 30px; font-size: 14px;">
+            <b>Sobre o App:</b> Este projeto ajuda novatos e idosos a continuarem em alerta no trânsito.
+        </div>
     </div>
 
     <!-- MENU -->
     <nav>
         <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
         <button onclick="showPage('scan', this)"><span class="nav-icon">📷</span>Câmera</button>
-        <button onclick="showPage('checklist', this)"><span class="nav-icon">📋</span>Checklist</button>
+        <button onclick="showPage('config', this)"><span class="nav-icon">⚙️</span>Ajustes</button>
     </nav>
 
     <script>
-        function showPage(pageId, btn) {
+        // Troca de Páginas
+        function showPage(pId, b) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
-            btn.classList.add('active-nav');
-            
-            // Inicia a câmera se for a página de scan
-            if(pageId === 'scan') { iniciarScanner(); } else { pararScanner(); }
+            document.getElementById(pId).classList.add('active');
+            document.querySelectorAll('nav button').forEach(n => n.classList.remove('active-nav'));
+            b.classList.add('active-nav');
+            if(pId === 'scan') { startScan(); } else { stopScan(); }
         }
 
-        let html5QrCode;
-
-        function iniciarScanner() {
-            html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" }, 
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                (decodedText) => {
-                    document.getElementById('reader').style.display = 'none';
-                    document.getElementById('resultado-scan').style.display = 'block';
-                    // Aqui simulamos a IA processando o texto do QR Code
-                    processarResultado(decodedText);
-                    html5QrCode.stop();
-                }
-            ).catch(err => console.log("Erro na câmera", err));
+        // Acessibilidade (Letras Maiores)
+        function toggleAcessibilidade() {
+            document.body.classList.toggle('alto-contraste');
+            const btn = document.getElementById('btn-acc');
+            btn.innerText = document.body.classList.contains('alto-contraste') ? "👁️ VOLTAR AO NORMAL" : "👁️ ATIVAR LETRAS GRANDES";
         }
 
-        function processarResultado(texto) {
-            const nome = document.getElementById('placa-nome');
-            const desc = document.getElementById('placa-desc');
-            
-            // Exemplo de como a "IA" vai ler os códigos
-            if(texto.toLowerCase().includes("pare")) {
-                nome.innerText = "🛑 R-1: Parada Obrigatória";
-                desc.innerText = "Você deve parar totalmente o veículo antes de entrar no cruzamento.";
-            } else if(texto.toLowerCase().includes("obras")) {
-                nome.innerText = "🚧 A-24: Obras";
-                desc.innerText = "Atenção! Existem homens ou máquinas trabalhando na pista adiante.";
+        // Lanterna de Emergência
+        let lInt; let pisc = false;
+        function toggleLanterna() {
+            const b = document.getElementById('btn-lanterna');
+            if (!pisc) {
+                pisc = true; b.innerHTML = "<span>🛑</span> PARAR SINAL";
+                lInt = setInterval(() => { document.body.style.background = document.body.style.background === 'red' ? 'white' : 'black'; }, 300);
             } else {
-                nome.innerText = "Placa Identificada";
-                desc.innerText = "Informação encontrada: " + texto;
+                pisc = false; clearInterval(lInt); document.body.style.background = "";
+                b.innerHTML = "<span>🔦</span> SINALIZAR LOCAL";
             }
         }
 
-        function reiniciarScanner() {
-            document.getElementById('reader').style.display = 'block';
-            document.getElementById('resultado-scan').style.display = 'none';
-            iniciarScanner();
+        // Scanner QR Code
+        let scanner;
+        function startScan() {
+            scanner = new Html5Qrcode("reader");
+            scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (txt) => {
+                document.getElementById('reader').style.display = 'none';
+                document.getElementById('res-scan').style.display = 'block';
+                const n = document.getElementById('pl-nome');
+                const d = document.getElementById('pl-desc');
+                
+                if(txt.toLowerCase().includes("pare")) { n.innerText = "🛑 PARE"; d.innerText = "Parada obrigatória. Pare totalmente o veículo."; }
+                else if(txt.toLowerCase().includes("obras")) { n.innerText = "🚧 OBRAS"; d.innerText = "Atenção! Máquinas e operários na pista."; }
+                else { n.innerText = "Código Lido"; d.innerText = txt; }
+                scanner.stop();
+            }).catch(e => console.log(e));
         }
+        function restartScan() { document.getElementById('reader').style.display = 'block'; document.getElementById('res-scan').style.display = 'none'; startScan(); }
+        function stopScan() { if(scanner) scanner.stop().catch(() => {}); }
 
-        function pararScanner() {
-            if(html5QrCode) { html5QrCode.stop().catch(() => {}); }
-        }
-
-        // Localização Zap
+        // Localização WhatsApp
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(p => {
                 document.getElementById('btn-zap').href = `https://api.whatsapp.com! Minha localização: https://www.google.com{p.coords.latitude},${p.coords.longitude}`;
