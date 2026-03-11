@@ -5,103 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergência Transital</title>
     <link rel="icon" href="icon.png" type="image/png">
-    <!-- Biblioteca do Leitor de QR Code -->
     <script src="https://unpkg.com"></script>
     <style>
         :root { 
-            --amarelo: #ffcc00; --vermelho: #d90429; --verde: #25d366; 
-            --fundo: #121212; --card: #1e1e1e; --texto: #ffffff;
-            --tamanho-fonte: 18px; --padding-btn: 20px;
+            --amarelo: #ffcc00; --vermelho: #ff4d4d; --verde: #2ecc71; 
+            --fundo: #1a1a1a; --card: #252525; --texto: #ffffff;
+            --sombra-escura: rgba(0,0,0,0.5); --sombra-clara: rgba(255,255,255,0.05);
         }
 
-        /* MODO ACESSIBILIDADE (Letras Maiores) */
-        .alto-contraste { 
-            --tamanho-fonte: 24px; --padding-btn: 30px; --fundo: #000000;
-        }
+        .alto-contraste { --fundo: #000; --card: #111; }
 
         body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--fundo); 
-            color: var(--texto); margin: 0; padding-bottom: 90px; transition: 0.3s; 
+            font-family: 'Poppins', sans-serif; background: var(--fundo); 
+            color: var(--texto); margin: 0; padding-bottom: 100px; transition: 0.4s; 
         }
 
+        /* Cabeçalho 3D Glass */
         header { 
-            background: var(--amarelo); color: #000; padding: 15px; text-align: center; 
-            font-weight: bold; font-size: 22px; position: sticky; top: 0; z-index: 100;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            background: rgba(255, 204, 0, 0.9); backdrop-filter: blur(10px);
+            color: #000; padding: 20px; text-align: center; 
+            font-weight: 800; font-size: 22px; position: sticky; top: 0; z-index: 100;
+            border-bottom: 3px solid rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px var(--sombra-escura);
         }
 
-        .page { display: none; padding: 20px; animation: fadeIn 0.4s; }
+        .page { display: none; padding: 25px; animation: slideUp 0.5s ease; }
         .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Botões Estilizados */
+        /* Botões 3D Reais */
         .btn { 
             display: flex; align-items: center; justify-content: center; gap: 15px; 
-            padding: var(--padding-btn); border: none; border-radius: 20px; 
-            font-size: var(--tamanho-fonte); font-weight: bold; color: white; 
-            text-decoration: none; margin-bottom: 15px; width: 100%; box-sizing: border-box;
-            box-shadow: 0 6px 0 #800; transition: 0.1s; cursor: pointer;
+            padding: 22px; border: none; border-radius: 24px; 
+            font-size: 18px; font-weight: 700; color: white; 
+            text-decoration: none; margin-bottom: 20px; width: 100%; box-sizing: border-box;
+            position: relative; cursor: pointer;
+            background: var(--card);
+            box-shadow: 8px 8px 16px var(--sombra-escura), -4px -4px 12px var(--sombra-clara);
+            transition: 0.2s ease;
         }
-        .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #800; }
+
+        .btn:active { 
+            transform: scale(0.96);
+            box-shadow: inset 6px 6px 12px var(--sombra-escura), inset -4px -4px 10px var(--sombra-clara);
+        }
         
-        .emergencia { background: var(--vermelho); }
-        .zap { background: var(--verde); box-shadow: 0 6px 0 #157339; }
-        .camera-btn { background: #4361ee; box-shadow: 0 6px 0 #2b3a8c; }
-        .config-btn { background: #444; box-shadow: 0 6px 0 #222; }
+        .emergencia { background: linear-gradient(145deg, #ff4d4d, #d90429); border: 2px solid #ff6666; }
+        .zap { background: linear-gradient(145deg, #2ecc71, #27ae60); border: 2px solid #55efc4; }
+        .camera-btn { background: linear-gradient(145deg, #3498db, #2980b9); border: 2px solid #74b9ff; }
+        .lanterna-btn { background: #ffffff; color: #000; border: 3px solid var(--amarelo); }
 
-        /* Câmera e Scanner */
-        #reader { width: 100%; border-radius: 20px; overflow: hidden; border: 3px solid var(--amarelo); margin-top: 15px; }
-        #res-scan { margin-top: 20px; padding: 20px; background: var(--card); border-radius: 15px; border: 2px solid var(--amarelo); display: none; }
-
-        /* Navegação Inferior */
-        nav { 
-            position: fixed; bottom: 0; width: 100%; background: #1a1a1a; 
-            display: flex; justify-content: space-around; padding: 12px 0; 
-            border-top: 2px solid #333; box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+        /* Cards Informativos 3D */
+        .card-info {
+            background: var(--card); padding: 20px; border-radius: 25px;
+            box-shadow: inset 2px 2px 5px var(--sombra-clara), 5px 5px 15px var(--sombra-escura);
+            margin-top: 20px; border: 1px solid #333;
         }
-        nav button { background: none; border: none; color: #888; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
-        nav button.active-nav { color: var(--amarelo); }
-        .nav-icon { font-size: 26px; margin-bottom: 4px; }
+
+        /* Menu Inferior 3D Glass */
+        nav { 
+            position: fixed; bottom: 15px; left: 15px; right: 15px;
+            background: rgba(30, 30, 30, 0.8); backdrop-filter: blur(15px);
+            display: flex; justify-content: space-around; padding: 15px 0; 
+            border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        nav button { background: none; border: none; color: #666; font-size: 11px; font-weight: bold; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        nav button.active-nav { color: var(--amarelo); transform: translateY(-5px); }
+        .nav-icon { font-size: 24px; margin-bottom: 5px; }
+
+        /* Câmera */
+        #reader { width: 100%; border-radius: 25px; overflow: hidden; border: 4px solid var(--amarelo); box-shadow: 0 10px 20px var(--sombra-escura); }
     </style>
 </head>
 <body>
 
-    <header>Emergência Transital</header>
+    <header>EMERGÊNCIA TRANSITAL</header>
 
-    <!-- HOME: SOCORRO -->
     <div id="home" class="page active">
-        <h2 style="text-align: center; color: var(--amarelo);">🆘 Ajuda Imediata</h2>
+        <h3 style="text-align: center; color: var(--amarelo); letter-spacing: 1px;">CENTRAL DE SOCORRO</h3>
         <a href="tel:191" class="btn emergencia"><span>📞</span> POLÍCIA (191)</a>
-        <a href="tel:193" class="btn emergencia" style="background:#b91c1c;"><span>🚑</span> BOMBEIROS (193)</a>
-        <a href="#" id="btn-zap" class="btn zap"><span>📍</span> ENVIAR LOCALIZAÇÃO</a>
-        <button class="btn" style="background:#fff; color:#000; box-shadow: 0 6px 0 #ccc;" onclick="toggleLanterna()" id="btn-lanterna"><span>🔦</span> SINALIZAR LOCAL</button>
+        <a href="tel:193" class="btn emergencia" style="background: linear-gradient(145deg, #c0392b, #8e44ad);"><span>🚑</span> BOMBEIROS (193)</a>
+        <a href="#" id="btn-zap" class="btn zap"><span>📍</span> LOCALIZAÇÃO ZAP</a>
+        <button class="btn lanterna-btn" onclick="toggleLanterna()" id="btn-lanterna"><span>🔦</span> SINALIZAR LOCAL</button>
     </div>
 
-    <!-- SCANNER: IDENTIFICAR PLACA -->
     <div id="scan" class="page">
-        <h2 style="text-align: center;">📷 Leitor de Placas</h2>
-        <p style="text-align: center;">Aponte para o QR Code da placa:</p>
+        <h2 style="text-align: center;">SCANNER DE PLACAS</h2>
         <div id="reader"></div>
-        <div id="res-scan">
+        <div id="res-scan" class="card-info" style="display: none;">
             <h3 id="pl-nome" style="color:var(--amarelo); margin:0;"></h3>
-            <p id="pl-desc" style="font-size: 18px; margin: 15px 0;"></p>
-            <button class="btn config-btn" onclick="restartScan()">Escanear Outra</button>
+            <p id="pl-desc" style="font-size: 16px; margin: 15px 0;"></p>
+            <button class="btn" style="background:#444;" onclick="restartScan()">ESCANEAR NOVAMENTE</button>
         </div>
     </div>
 
-    <!-- CONFIGURAÇÕES: ACESSIBILIDADE -->
     <div id="config" class="page">
-        <h2 style="text-align: center;">⚙️ Ajustes</h2>
-        <p>Melhore a visualização para idosos:</p>
-        <button class="btn config-btn" onclick="toggleAcessibilidade()" id="btn-acc">
-            <span>👁️</span> ATIVAR LETRAS GRANDES
-        </button>
-        <div style="background: #333; padding: 15px; border-radius: 15px; margin-top: 30px; font-size: 14px;">
-            <b>Sobre o App:</b> Este projeto ajuda novatos e idosos a continuarem em alerta no trânsito.
+        <h2 style="text-align: center;">AJUSTES</h2>
+        <div class="card-info">
+            <p style="margin-top:0;">Melhorar para Idosos:</p>
+            <button class="btn" style="background:#444;" onclick="toggleAcessibilidade()" id="btn-acc">
+                <span>👁️</span> LETRAS GRANDES: OFF
+            </button>
+        </div>
+        <div class="card-info" style="font-size: 14px; opacity: 0.8;">
+            <b>Missão:</b> Garantir segurança para motoristas novatos e idosos através da tecnologia.
         </div>
     </div>
 
-    <!-- MENU -->
     <nav>
         <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
         <button onclick="showPage('scan', this)"><span class="nav-icon">📷</span>Câmera</button>
@@ -109,7 +120,6 @@
     </nav>
 
     <script>
-        // Troca de Páginas
         function showPage(pId, b) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pId).classList.add('active');
@@ -118,19 +128,17 @@
             if(pId === 'scan') { startScan(); } else { stopScan(); }
         }
 
-        // Acessibilidade (Letras Maiores)
         function toggleAcessibilidade() {
             document.body.classList.toggle('alto-contraste');
             const btn = document.getElementById('btn-acc');
-            btn.innerText = document.body.classList.contains('alto-contraste') ? "👁️ VOLTAR AO NORMAL" : "👁️ ATIVAR LETRAS GRANDES";
+            btn.innerText = document.body.classList.contains('alto-contraste') ? "👁️ LETRAS GRANDES: ON" : "👁️ LETRAS GRANDES: OFF";
         }
 
-        // Lanterna de Emergência
         let lInt; let pisc = false;
         function toggleLanterna() {
             const b = document.getElementById('btn-lanterna');
             if (!pisc) {
-                pisc = true; b.innerHTML = "<span>🛑</span> PARAR SINAL";
+                pisc = true; b.innerHTML = "<span>🛑</span> PARAR";
                 lInt = setInterval(() => { document.body.style.background = document.body.style.background === 'red' ? 'white' : 'black'; }, 300);
             } else {
                 pisc = false; clearInterval(lInt); document.body.style.background = "";
@@ -138,7 +146,6 @@
             }
         }
 
-        // Scanner QR Code
         let scanner;
         function startScan() {
             scanner = new Html5Qrcode("reader");
@@ -150,14 +157,13 @@
                 
                 if(txt.toLowerCase().includes("pare")) { n.innerText = "🛑 PARE"; d.innerText = "Parada obrigatória. Pare totalmente o veículo."; }
                 else if(txt.toLowerCase().includes("obras")) { n.innerText = "🚧 OBRAS"; d.innerText = "Atenção! Máquinas e operários na pista."; }
-                else { n.innerText = "Código Lido"; d.innerText = txt; }
+                else { n.innerText = "Lido com Sucesso"; d.innerText = txt; }
                 scanner.stop();
             }).catch(e => console.log(e));
         }
         function restartScan() { document.getElementById('reader').style.display = 'block'; document.getElementById('res-scan').style.display = 'none'; startScan(); }
         function stopScan() { if(scanner) scanner.stop().catch(() => {}); }
 
-        // Localização WhatsApp
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(p => {
                 document.getElementById('btn-zap').href = `https://api.whatsapp.com! Minha localização: https://www.google.com{p.coords.latitude},${p.coords.longitude}`;
