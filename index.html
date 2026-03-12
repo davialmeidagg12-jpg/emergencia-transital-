@@ -173,8 +173,26 @@
         }
 
         // FUNÇÕES DA CÂMERA (MOCKUP)
-        function startScan() { console.log("Câmera ativada"); }
-        function stopScan() { console.log("Câmera desligada"); }
+                function startScan() {
+            scanner = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            
+            scanner.start({ facingMode: "environment" }, config, (txt) => {
+                document.getElementById('res-scan').style.display = 'block';
+                document.getElementById('pl-nome').innerText = "Placa / QR Detectado";
+                document.getElementById('pl-desc').innerText = "Conteúdo: " + txt;
+                stopScan();
+            }).catch(err => console.error("Erro na câmera", err));
+        }
+
+        function stopScan() {
+            if(scanner) {
+                scanner.stop().then(() => {
+                    document.getElementById('reader').innerHTML = "";
+                }).catch(err => console.log("Erro ao parar", err));
+            }
+        }
+
 
         // CHECAR SE JÁ TEM CONTATO AO ABRIR
         window.onload = () => {
