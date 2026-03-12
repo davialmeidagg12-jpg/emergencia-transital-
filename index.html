@@ -103,10 +103,11 @@
 </button>
 
         <!-- BOTÃO MAPA LARGO -->
-        <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base background: #3498db; color: blue;" style="grid-column: span 2; padding: 18px; flex-direction: row; gap: 15px; margin-top: 5px;">
-      <!-- BOTÃO MAPA LARGO COM CORES CORRIGIDAS -->
-<button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base" style="grid-column: span 2; padding: 20px; background: #2980b9; color: #ffffff; flex-direction: row; gap: 15px; margin-top: 10px; border: none; font-weight: 800; font-size: 16px;">
-    <span style="font-size: 28px;">🗺️</span> VER MAPA E TRÂNSITO
+       <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base" 
+        style="grid-column: span 2; background: #2980b9 !important; color: white !important; padding: 20px; margin-top: 10px; flex-direction: row; gap: 15px; border: none;">
+    <span>🗺️</span> <b>VER MAPA E TRÂNSITO</b>
+</button>
+
 </button>
 
         </button>
@@ -178,6 +179,17 @@ if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(p => {
         lat = p.coords.latitude; 
         lon = p.coords.longitude;
+        
+        // CORREÇÃO: Usando CRASE (tecla ao lado do P no teclado)
+        const mapUrl = `https://maps.google.com{lat},${lon}&layer=t&t=m&z=15&output=embed`;
+        
+        const mapElement = document.getElementById('google-maps');
+        if(mapElement) mapElement.src = mapUrl;
+    }, (err) => {
+        console.log("Erro de GPS: ", err);
+    });
+}
+
         // USE EXATAMENTE ESTE LINK COM CRASE:
         const mapUrl = `https://maps.google.com{lat},${lon}&layer=t&t=m&z=15&output=embed`;
         document.getElementById('google-maps').src = mapUrl;
