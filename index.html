@@ -81,23 +81,34 @@
  </style>
 </head>
 <body>
+<header style="background: var(--amarelo); color: #000; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-family: sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000;">
+    <span style="font-size: 26px;">🛡️</span>
+    <div style="text-align: left; line-height: 1.1;">
+        <div style="font-size: 18px; font-weight: 900;">EMERGÊNCIA</div>
+        <div style="font-size: 10px; font-weight: 800; color: #d90429; letter-spacing: 2px;">TRANSITAL PRO</div>
+    </div>
+</header>
 
     <header>EMERGÊNCIA TRANSITAL PRO</header>
 
     <div class="content">
-        <!-- PÁGINA 1: INÍCIO -->
-        <div id="home" class="page active">
-            <h3 style="text-align:center; margin-bottom: 15px;">Painel de Controle</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <a href="tel:191" class="btn-base btn-inicio bg-vermelho"><span>🚨</span> POLÍCIA</a>
-                <a href="tel:193" class="btn-base btn-inicio bg-vermelho" style="background:#b91c1c;"><span>🚑</span> BOMBEIROS</a>
-                <button onclick="enviarZap()" class="btn-base btn-inicio bg-verde"><span>📍</span> MANDAR ZAP</button>
-                <button onclick="showPage('camera', document.getElementById('nav-camera'))" class="btn-base btn-inicio bg-roxo"><span>📷</span> LER PLACA</button>
-            </div>
-            <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base bg-azul" style="margin-top: 15px; padding: 15px;">🗺️ VER MAPA E TRÂNSITO</button>
-        </div>
+     <!-- PÁGINA 1: INÍCIO -->
+<div id="home" class="page active">
+    <h3 style="text-align:center; margin: 10px 0 20px 0; color: var(--amarelo); font-size: 14px;">PAINEL DE CONTROLE</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <a href="tel:191" class="btn-base bg-vermelho" style="padding: 20px 10px; flex-direction: column;"><span>🚨</span> POLÍCIA</a>
+        <a href="tel:193" class="btn-base bg-vermelho" style="background:#b91c1c; padding: 20px 10px; flex-direction: column;"><span>🚑</span> BOMBEIROS</a>
+        <button onclick="enviarZap()" class="btn-base bg-verde" style="padding: 20px 10px; flex-direction: column;"><span>📍</span> MANDAR ZAP</button>
+        <button onclick="showPage('camera', document.getElementById('nav-camera'))" class="btn-base bg-roxo" style="padding: 20px 10px; flex-direction: column;"><span>📷</span> LER PLACA</button>
+        
+        <!-- BOTÃO MAPA LARGO -->
+        <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base bg-azul" style="grid-column: span 2; padding: 18px; flex-direction: row; gap: 15px; margin-top: 5px;">
+            <span>🗺️</span> VER MAPA E TRÂNSITO
+        </button>
+    </div>
+</div>
 
-        <!-- PÁGINA 2: IDOSO -->
         <div id="idoso" class="page">
             <a href="tel:191" class="btn-base btn-idoso bg-vermelho">📞 POLÍCIA</a>
             <button onclick="ligarFamilia()" class="btn-base btn-idoso bg-rosa">❤️ FAMÍLIA</button>
