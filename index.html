@@ -94,6 +94,19 @@
 
         <!-- PÁGINA 5: CÂMERA (SCANNER) -->
         <div id="camera" class="page">
+                  <!-- CONTINUAÇÃO DA PÁGINA 3: FAMÍLIA -->
+            <div id="contato-salvo" style="margin-top:20px; display:none; text-align:center;">
+                <button onclick="ligarFamilia()" class="btn-base bg-rosa" style="padding:20px;">📞 LIGAR AGORA</button>
+            </div>
+        </div>
+
+        <!-- PÁGINA 4: MAPA -->
+        <div id="mapa" class="page" style="padding:0; height:100%;">
+            <iframe id="google-maps" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+
+        <!-- PÁGINA 5: CÂMERA (SCANNER) -->
+        <div id="camera" class="page">
             <h3 style="text-align:center; color:var(--amarelo);">Identificador de Placas</h3>
             <div id="reader"></div>
             <div id="res-scan" style="display:none; margin-top:20px; background:#252525; padding:20px; border-radius:20px; border:1px solid var(--amarelo);">
@@ -104,6 +117,7 @@
         </div>
     </div>
 
+    <!-- MENU INFERIOR -->
     <nav>
         <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
         <button onclick="showPage('idoso', this)"><span class="nav-icon">👴</span>Idoso</button>
@@ -114,13 +128,17 @@
 
     <script>
         let lat, lon, scanner;
+
+        // PEGAR LOCALIZAÇÃO E CARREGAR MAPA
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(p => {
-                lat = p.coords.latitude; lon = p.coords.longitude;
-                document.getElementById('google-maps').src = `https://www.google.com{lat},${lon}&z=15&output=embed`;
+                lat = p.coords.latitude; 
+                lon = p.coords.longitude;
+                document.getElementById('google-maps').src = `https://maps.google.com{lat},${lon}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
             });
         }
 
+        // NAVEGAÇÃO
         function showPage(pId, b) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pId).classList.add('active');
@@ -129,35 +147,39 @@
             if(pId === 'camera') startScan(); else stopScan();
         }
 
-        function startScan() {
-            scanner = new Html5Qrcode("reader");
-            scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (txt) => {
-                document.getElementById('reader').style.display = 'none';
-                document.getElementById('res-scan').style.display = 'block';
-                document.getElementById('pl-nome').innerText = "Placa Identificada";
-                document.getElementById('pl-desc').innerText = "Resultado: " + txt;
-                scanner.stop();
-            }).catch(e => console.log(e));
-        }
-        function restartScan() { document.getElementById('reader').style.display='block'; document.getElementById('res-scan').style.display='none'; startScan(); }
-        function stopScan() { if(scanner) scanner.stop().catch(()=>null); }
-
+        // SALVAR FAMÍLIA
         function salvarFamilia() {
-            localStorage.setItem('ice_nome', document.getElementById('nome-familia').value);
-            localStorage.setItem('ice_tel', document.getElementById('tel-familia').value);
-            alert("Salvo!"); carregarFamilia();
+            const nome = document.getElementById('nome-familia').value;
+            const tel = document.getElementById('tel-familia').value;
+            if(nome && tel) {
+                localStorage.setItem('ice_nome', nome);
+                localStorage.setItem('ice_tel', tel);
+                alert("✅ Contato Salvo!");
+                document.getElementById('contato-salvo').style.display = 'block';
+            }
         }
-        function carregarFamilia() {
-            if(localStorage.getItem('ice_tel')) document.getElementById('contato-salvo').style.display = 'block';
-        }
+
         function ligarFamilia() {
-            const t = localStorage.getItem('ice_tel');
-            if(t) window.location.href = `tel:${t}`; else alert("Salve um contato primeiro!");
+            const tel = localStorage.getItem('ice_tel');
+            if(tel) window.location.href = `tel:${tel}`;
+            else alert("Nenhum número salvo!");
         }
+
         function enviarZap() {
-            if(lat) window.location.href = `https://wa.me! Local: https://www.google.com{lat},${lon}`;
+            const tel = localStorage.getItem('ice_tel');
+            if(!tel) { alert("Salve um contato primeiro!"); return; }
+            const msg = `🚨 EMERGÊNCIA! Minha localização: https://www.google.com{lat},${lon}`;
+            window.open(`https://wa.me{tel}?text=${encodeURIComponent(msg)}`, '_blank');
         }
-        window.onload = carregarFamilia;
+
+        // FUNÇÕES DA CÂMERA (MOCKUP)
+        function startScan() { console.log("Câmera ativada"); }
+        function stopScan() { console.log("Câmera desligada"); }
+
+        // CHECAR SE JÁ TEM CONTATO AO ABRIR
+        window.onload = () => {
+            if(localStorage.getItem('ice_tel')) document.getElementById('contato-salvo').style.display = 'block';
+        };
     </script>
 </body>
 </html>
