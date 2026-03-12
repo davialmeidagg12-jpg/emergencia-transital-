@@ -86,9 +86,7 @@
     <div style="text-align: left; line-height: 1.1;">
 </header>
 
-   
-
-    <div class="content">
+ <div class="content">
      <!-- PÁGINA 1: INÍCIO -->
 <div id="home" class="page active">
     <h3 style="text-align:center; margin: 10px 0 20px 0; color: var(--amarelo); font-size: 14px;">PAINEL DE CONTROLE</h3>
@@ -109,7 +107,6 @@
         </button>
     </div> <!-- Fecha a grid da linha 106 -->
 </div> <!-- Fecha a home da linha 103 -->
-
 <!-- PÁGINA 2: IDOSO -->
 <div id="idoso" class="page">
     <a href="tel:191" class="btn-base btn-idoso bg-vermelho"><span>🚨</span> POLÍCIA</a>
@@ -194,8 +191,6 @@ if (navigator.geolocation) {
         console.log("Erro de GPS: ", err);
     });
 }
-
-
 // FUNÇÃO QUE DESTRAVA AS PÁGINAS
 function showPage(pId, btn) {
     // Esconde todas
@@ -232,7 +227,6 @@ function salvarFamilia() {
     }
 }
 // --- CÓDIGO DA CÂMERA ---
-
 function startScan() {
     // 1. Cria o leitor no quadrado "reader"
     scanner = new Html5Qrcode("reader");
