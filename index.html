@@ -32,13 +32,13 @@
 
         /* QUIZ */
         .quiz-container { background: #1e1e1e; padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #333; }
-        .quiz-placa { font-size: 80px; margin: 15px 0; display: block; }
-        .opcao-btn { width: 100%; padding: 15px; margin: 8px 0; border-radius: 10px; border: 2px solid #333; background: #252525; color: white; font-weight: bold; }
-        .correto { background: var(--verde) !important; }
-        .errado { background: var(--vermelho) !important; }
+        .quiz-placa { font-size: 80px; margin: 15px 0; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+        .opcao-btn { width: 100%; padding: 15px; margin: 8px 0; border-radius: 10px; border: 2px solid #333; background: #252525; color: white; font-weight: bold; cursor: pointer; }
+        .correto { background: var(--verde) !important; border-color: white !important; }
+        .errado { background: var(--vermelho) !important; border-color: white !important; }
 
         /* NAV */
-        nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #1a1a1a; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; }
+        nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #1a1a1a; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; z-index: 1000; }
         nav button { background: none; border: none; color: #777; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         nav button.active-nav { color: var(--amarelo); font-weight: bold; }
         .nav-icon { font-size: 20px; }
@@ -94,8 +94,8 @@
     <!-- 4. CÂMERA -->
     <div id="camera" class="page">
         <h3 style="text-align:center; color: var(--amarelo);">SCANNER DE PLACA</h3>
-        <div id="reader" style="width: 100%; border-radius: 15px; overflow: hidden; background:#000;"></div>
-        <p style="font-size: 12px; text-align: center; color: #888; margin-top: 10px;">Aponte para a placa para detectar.</p>
+        <div id="reader" style="width: 100%; border-radius: 15px; overflow: hidden; background:#000; min-height: 300px;"></div>
+        <p style="font-size: 12px; text-align: center; color: #888; margin-top: 15px;">Aponte para uma placa ou QR Code para detectar.</p>
     </div>
 
     <!-- 5. MAPA -->
@@ -121,12 +121,11 @@
         document.getElementById(pageId).classList.add('active');
         if(btn) btn.classList.add('active-nav');
         
-        // Parar câmera ao sair
         if(pageId !== 'camera' && html5QrCode) {
             html5QrCode.stop().catch(() => {});
         }
 
-        if(pageId === 'quiz') iniciarQuiz();
+        if(pageId === 'quiz') carregarPergunta();
         if(pageId === 'camera') iniciarCamera();
         if(pageId === 'mapa') carregarMapa();
     }
@@ -134,41 +133,61 @@
     function iniciarCamera() {
         html5QrCode = new Html5Qrcode("reader");
         html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (decodedText) => {
-            alert("Placa Detectada: " + decodedText);
-        }).catch(err => { console.error("Erro na câmera: ", err); });
+            alert("Detectado: " + decodedText);
+        }).catch(err => { console.error("Câmera desligada ou erro: ", err); });
     }
 
-    // BANCO DE DADOS QUIZ
+    // BANCO DE DADOS QUIZ (16 PERGUNTAS IMPORTANTES)
     const bancoPlacas = [
-        { p: "🛑", c: "Parada Obrigatória", o: ["Pare", "Parada Obrigatória", "Atenção"] },
+        { p: "🛑", c: "Parada Obrigatória", o: ["Pare se vier carro", "Parada Obrigatória", "Dê a preferência"] },
         { p: "🚫", c: "Sentido Proibido", o: ["Sentido Proibido", "Pare", "Não Entre"] },
-        { p: "🅿️", c: "Estacionamento", o: ["Pare", "Estacionamento", "Pátio"] },
+        { p: "🅿️", c: "Estacionamento Regulamentado", o: ["Pare", "Estacionamento Regulamentado", "Proibido Parar"] },
         { p: "🚸", c: "Área Escolar", o: ["Crianças", "Área Escolar", "Parque"] },
         { p: "🚴", c: "Ciclistas", o: ["Ciclistas", "Proibido Bicicleta", "Ciclovia"] },
-        { p: "⛽", c: "Posto", o: ["Posto", "Mecânico", "Comida"] }
+        { p: "⛽", c: "Posto de Combustível", o: ["Posto", "Mecânico", "Comida"] },
+        { p: "⚠️", c: "Advertência Geral", o: ["Atenção", "Obras", "Advertência Geral"] },
+        { p: "🔞", c: "Proibido menores de 18", o: ["Proibido menores", "Velocidade Máxima", "Sentido Proibido"] },
+        { p: "🚶", c: "Trânsito de Pedestres", o: ["Passagem Protegida", "Trânsito de Pedestres", "Cuidado Crianças"] },
+        { p: "🐄", c: "Animais na Pista", o: ["Fazenda", "Animais na Pista", "Animais"] },
+        { p: "🏥", c: "Hospital", o: ["Ambulância", "Hospital", "Farmácia"] },
+        { p: "⛔", c: "Sentido Proibido de Circulação", o: ["Pare", "Sentido Proibido", "Atenção"] },
+        { p: "↕️", c: "Sentido Duplo", o: ["Sentido Único", "Sentido Duplo", "Pare"] },
+        { p: "📶", c: "Área com Wi-fi", o: ["Radar", "Área com Wi-fi", "Celular"] },
+        { p: "🍴", c: "Restaurante", o: ["Hotel", "Cozinha", "Restaurante"] },
+        { p: "🛤️", c: "Passagem de Nível", o: ["Ponte", "Passagem de Nível", "Cruzamento"] }
     ];
     let qAtual = 0;
 
-    function iniciarQuiz() {
+    function carregarPergunta() {
         const item = bancoPlacas[qAtual];
         document.getElementById('placa-img').innerText = item.p;
         const opts = document.getElementById('opcoes');
         opts.innerHTML = "";
-        item.o.forEach(opt => {
+        
+        // Embaralha as opções
+        const opcoesEmbaralhadas = [...item.o].sort(() => Math.random() - 0.5);
+
+        opcoesEmbaralhadas.forEach(opt => {
             const b = document.createElement('button');
             b.className = "opcao-btn";
             b.innerText = opt;
             b.onclick = () => {
+                const todos = document.querySelectorAll('.opcao-btn');
+                todos.forEach(btn => btn.disabled = true);
                 if(opt === item.c) b.classList.add('correto');
                 else b.classList.add('errado');
-                setTimeout(() => { qAtual = (qAtual + 1) % bancoPlacas.length; iniciarQuiz(); }, 1000);
+                
+                setTimeout(() => { 
+                    qAtual = (qAtual + 1) % bancoPlacas.length; 
+                    carregarPergunta(); 
+                }, 1200);
             };
             opts.appendChild(b);
         });
-        document.getElementById('quiz-status').innerText = `Pergunta ${qAtual + 1} de ${bancoPlacas.length}`;
+        document.getElementById('quiz-status').innerText = `Placa ${qAtual + 1} de ${bancoPlacas.length}`;
     }
 
-    function salvarFamilia() { localStorage.setItem('telFamilia', document.getElementById('tel-familia').value); alert('Salvo!'); }
+    function salvarFamilia() { localStorage.setItem('telFamilia', document.getElementById('tel-familia').value); alert('Salvo! ✅'); }
     function ligarFamilia() { const n = localStorage.getItem('telFamilia'); if(n) window.location.href="tel:"+n; else alert('Configure o número!'); }
     function enviarZap() { window.open("https://wa.me🚨 Ajuda!", "_blank"); }
     function carregarMapa() { if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(p => { document.getElementById('google-maps').src = `https://maps.google.com{p.coords.latitude},${p.coords.longitude}&z=15&output=embed`; }); } }
