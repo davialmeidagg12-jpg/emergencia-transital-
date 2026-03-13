@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Emergência Transital PRO</title>
+    <!-- Biblioteca do Scanner -->
     <script src="https://unpkg.com"></script>
 
     <style>
@@ -11,74 +12,111 @@
             --amarelo: #ffcc00; --vermelho: #d90429; --verde: #2ecc71; 
             --fundo: #121212; --card: #1e1e1e; --texto: #ffffff;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--fundo); color: var(--texto); margin: 0; padding-bottom: 80px; }
-        header { background: var(--amarelo); color: #000; padding: 15px; text-align: center; font-weight: 900; position: sticky; top: 0; z-index: 1000; }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background: var(--fundo); color: var(--texto); 
+            margin: 0; padding-bottom: 90px; overflow-x: hidden; 
+        }
+        
+        header { 
+            background: var(--amarelo); color: #000; padding: 15px; 
+            text-align: center; font-weight: 900; font-size: 18px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000;
+        }
+
         .content { padding: 15px; }
         .page { display: none; animation: fadeIn 0.3s ease; }
         .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* BOTÕES TURBO (GRANDES) */
         .btn-base { 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 8px; border: none; border-radius: 15px; font-weight: 700; color: white; 
-            padding: 20px 10px; cursor: pointer; transition: 0.2s; width: 100%; font-size: 13px;
+            gap: 12px; border: none; border-radius: 20px; font-weight: 800; color: white; 
+            text-decoration: none; padding: 35px 10px; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4); font-size: 16px; width: 100%;
+            text-transform: uppercase;
         }
+
+        .btn-base:active { transform: scale(0.95); opacity: 0.9; }
+        .btn-base span { font-size: 45px; } /* Emojis Gigantes */
+
+        /* Cores */
         .bg-vermelho { background: var(--vermelho); }
         .bg-verde { background: var(--verde); }
         .bg-roxo { background: #9b59b6; }
         .bg-rosa { background: #e91e63; }
-        .btn-base span { font-size: 28px; }
+        .bg-azul { background: #2980b9; }
 
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
-        nav button { background: none; border: none; color: #777; font-size: 11px; display: flex; flex-direction: column; align-items: center; }
-        nav button.active-nav { color: var(--amarelo); }
+        /* INPUTS */
+        input { 
+            width: 100%; padding: 20px; margin-bottom: 15px; border-radius: 12px; 
+            border: 1px solid #444; background: #222; color: white; box-sizing: border-box; 
+            font-size: 18px;
+        }
+
+        /* MENU INFERIOR AJUSTADO */
+        nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: #1a1a1a; display: flex; justify-content: space-around; 
+            padding: 10px 0; border-top: 2px solid #333; z-index: 1000; 
+        }
+        nav button { 
+            background: none; border: none; color: #777; font-size: 12px; 
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            padding: 5px; min-width: 60px;
+        }
+        nav button span { font-size: 24px; }
+        nav button.active-nav { color: var(--amarelo); font-weight: bold; }
     </style>
 </head>
 <body>
-<!-- ... (mantenha seu <head> e <style> igual) ... -->
-<body>
+
 <header>🛡️ EMERGÊNCIA TRANSITAL PRO</header>
 
 <div class="content">
     <!-- PÁGINA 1: INÍCIO -->
     <div id="home" class="page active">
-        <h3 style="text-align:center; color: var(--amarelo);">PAINEL DE CONTROLE</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <h3 style="text-align:center; color: var(--amarelo); margin-bottom: 20px;">PAINEL DE CONTROLE</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
             <a href="tel:191" class="btn-base bg-vermelho"><span>🚨</span> POLÍCIA</a>
             <a href="tel:193" class="btn-base bg-vermelho" style="background:#b91c1c;"><span>🚑</span> BOMBEIROS</a>
-            <button onclick="enviarZap()" class="btn-base bg-verde"><span>📍</span> MANDAR ZAP</button>
+            <button onclick="enviarZap()" class="btn-base bg-verde"><span>📍</span> ZAP LOCAL</button>
             <button onclick="showPage('camera', this)" class="btn-base bg-roxo"><span>📷</span> LER PLACA</button>
-            <button onclick="showPage('mapa', this)" class="btn-base" style="grid-column: span 2; background: #2980b9; flex-direction: row; gap: 15px;">
-                <span>🗺️</span> <b>VER MAPA</b>
+            <button onclick="showPage('mapa', this)" class="btn-base bg-azul" style="grid-column: span 2; flex-direction: row; gap: 20px;">
+                <span>🗺️</span> <b>VER MAPA E TRÂNSITO</b>
             </button>
         </div>
     </div>
 
     <!-- PÁGINA 2: IDOSO -->
     <div id="idoso" class="page">
-        <h3 style="text-align:center; color: var(--amarelo);">MODO IDOSO</h3>
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            <button onclick="ligarFamilia()" class="btn-base bg-rosa"><span>❤️</span> FAMÍLIA</button>
-            <button onclick="enviarZap()" class="btn-base bg-verde"><span>📍</span> MANDAR ZAP</button>
+        <h3 style="text-align:center; color: var(--amarelo); margin-bottom: 20px;">MODO IDOSO</h3>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <a href="tel:191" class="btn-base bg-vermelho"><span>🚨</span> CHAMAR POLÍCIA</a>
+            <button onclick="ligarFamilia()" class="btn-base bg-rosa"><span>❤️</span> LIGAR FAMÍLIA</button>
+            <button onclick="enviarZap()" class="btn-base bg-verde"><span>📍</span> ENVIAR LOCAL</button>
         </div>
     </div>
 
     <!-- PÁGINA 3: FAMÍLIA -->
     <div id="familia" class="page">
-        <h3 style="text-align:center; color: var(--amarelo);">CONTATO</h3>
-        <input type="tel" id="tel-familia" placeholder="DDD + Número">
-        <button onclick="salvarFamilia()" class="btn-base bg-verde">💾 SALVAR</button>
+        <h3 style="text-align:center; color: var(--amarelo);">CONTATO DE EMERGÊNCIA</h3>
+        <p style="text-align:center; font-size: 14px; color: #aaa;">Configure o número para chamadas rápidas</p>
+        <input type="tel" id="tel-familia" placeholder="Ex: 11999998888">
+        <button onclick="salvarFamilia()" class="btn-base bg-verde">💾 SALVAR CONTATO</button>
     </div>
 
     <!-- PÁGINA 4: MAPA -->
-    <div id="mapa" class="page" style="height: 400px;">
-        <iframe id="google-maps" width="100%" height="100%" style="border:0;"></iframe>
+    <div id="mapa" class="page" style="height: 70vh;">
+        <iframe id="google-maps" width="100%" height="100%" style="border:0; border-radius: 20px;" loading="lazy"></iframe>
     </div>
 
     <!-- PÁGINA 5: CÂMERA -->
     <div id="camera" class="page">
-        <h3 style="text-align:center;">SCANNER</h3>
-        <div id="reader"></div>
+        <h3 style="text-align:center; color: var(--amarelo);">SCANNER DE PLACA</h3>
+        <div id="reader" style="width: 100%; border-radius: 20px; overflow: hidden;"></div>
     </div>
 </div>
 
@@ -92,32 +130,58 @@
 
 <script>
     function showPage(pageId, btn) {
-        // Esconde todas as páginas e remove destaque do menu
+        // Navegação entre abas
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
         
-        // Mostra a página selecionada e destaca o botão
         document.getElementById(pageId).classList.add('active');
-        if(btn) btn.classList.add('active-nav');
+        if(btn && btn.tagName === 'BUTTON') {
+            btn.classList.add('active-nav');
+        }
+
+        // Se abrir o mapa, tenta carregar a localização
+        if(pageId === 'mapa') {
+            carregarMapa();
+        }
     }
 
     function salvarFamilia() {
         const num = document.getElementById('tel-familia').value;
-        localStorage.setItem('telFamilia', num);
-        alert('Número salvo!');
+        if(num) {
+            localStorage.setItem('telFamilia', num);
+            alert('Número salvo com sucesso! ✅');
+        } else {
+            alert('Digite um número primeiro!');
+        }
     }
 
     function ligarFamilia() {
         const num = localStorage.getItem('telFamilia');
-        if(num) window.location.href = "tel:" + num;
-        else alert('Salve um número primeiro!');
+        if(num) {
+            window.location.href = "tel:" + num;
+        } else {
+            alert('Você ainda não salvou o número da família!');
+            showPage('familia');
+        }
     }
 
     function enviarZap() {
-        window.open("https://wa.me de ajuda!", "_blank");
+        // Exemplo simples de zap. Você pode adicionar a localização real depois
+        const msg = encodeURIComponent("🚨 Preciso de ajuda! Estou em uma emergência.");
+        window.open(`https://wa.me{msg}`, '_blank');
+    }
+
+    function carregarMapa() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(p => {
+                const lat = p.coords.latitude;
+                const lon = p.coords.longitude;
+                // Usando o embed do maps (Nota: Para uso real precisa de API KEY do Google)
+                document.getElementById('google-maps').src = `https://maps.google.com{lat},${lon}&z=15&output=embed`;
+            });
+        }
     }
 </script>
-</body>
 
 </body>
 </html>
