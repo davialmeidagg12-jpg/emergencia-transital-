@@ -34,7 +34,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             gap: 8px; border: none; border-radius: 15px; font-weight: 800; color: white; 
             min-height: 110px; padding: 10px; cursor: pointer; transition: 0.2s; width: 100%; 
-            text-transform: uppercase; box-sizing: border-box; font-size: 12px;
+            text-transform: uppercase; box-sizing: border-box; font-size: 11px;
         }
         .btn-base:active { transform: scale(0.95); }
         .btn-base span { font-size: 35px; }
@@ -45,14 +45,14 @@
         .bg-rosa { background: #e91e63; }
         .bg-azul { background: #2980b9; }
 
-        /* ESTILO QUIZ */
-        .quiz-container { background: #1e1e1e; padding: 20px; border-radius: 20px; text-align: center; }
-        .quiz-placa { font-size: 80px; margin: 20px 0; display: block; }
+        /* ESTILO QUIZ TURBO */
+        .quiz-container { background: #1e1e1e; padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #333; }
+        .quiz-placa { font-size: 90px; margin: 15px 0; display: block; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
         .opcao-btn { 
-            width: 100%; padding: 15px; margin: 8px 0; border-radius: 10px; border: 2px solid #333;
-            background: #252525; color: white; font-weight: bold; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 16px; margin: 8px 0; border-radius: 12px; border: 2px solid #333;
+            background: #252525; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px;
         }
-        .correto { background: var(--verde) !important; border-color: white !important; }
+        .correto { background: var(--verde) !important; border-color: white !important; transform: scale(1.02); }
         .errado { background: var(--vermelho) !important; border-color: white !important; }
 
         nav { 
@@ -77,7 +77,7 @@
     <div id="home" class="page active">
         <div style="background: #1e1e1e; padding: 15px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid var(--amarelo);">
             <h3 style="margin:0; font-size: 14px; color: var(--amarelo);">SISTEMA ATIVO</h3>
-            <p style="margin:5px 0 0 0; font-size: 12px; color: #aaa;">Selecione uma ferramenta de suporte.</p>
+            <p style="margin:5px 0 0 0; font-size: 12px; color: #aaa;">Painel de Controle e Monitoramento.</p>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <a href="tel:191" class="btn-base bg-vermelho"><span>🚨</span> POLÍCIA</a>
@@ -90,6 +90,22 @@
         </div>
     </div>
 
+    <!-- QUIZ -->
+    <div id="quiz" class="page">
+        <h3 style="text-align:center; color: var(--amarelo);">DESAFIO CNH PRO</h3>
+        <div class="quiz-container">
+            <div id="quiz-box">
+                <span id="placa-img" class="quiz-placa">🛑</span>
+                <p id="pergunta-texto" style="font-weight: bold; margin-bottom: 20px; min-height: 40px;">O que esta placa indica?</p>
+                <div id="opcoes"></div>
+            </div>
+            <div style="margin-top:20px; display: flex; justify-content: space-between; align-items: center;">
+                <p id="quiz-status" style="font-size:12px; color: #888; margin:0;"></p>
+                <p id="quiz-score" style="font-size:12px; color: var(--verde); font-weight: bold; margin:0;"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- IDOSO -->
     <div id="idoso" class="page">
         <div style="text-align: center; margin-bottom: 25px;">
@@ -99,19 +115,6 @@
         <div style="display: flex; flex-direction: column; gap: 20px;">
             <a href="tel:191" class="btn-base bg-vermelho" style="min-height: 160px; font-size: 18px; border: 3px solid white;"><span>🚨</span> LIGAR POLÍCIA</a>
             <button onclick="ligarFamilia()" class="btn-base bg-rosa" style="min-height: 160px; font-size: 18px;"><span>❤️</span> FAMÍLIA</button>
-        </div>
-    </div>
-
-    <!-- QUIZ (NOVA PÁGINA) -->
-    <div id="quiz" class="page">
-        <h3 style="text-align:center; color: var(--amarelo);">SIMULADO CNH</h3>
-        <div class="quiz-container">
-            <div id="quiz-box">
-                <span id="placa-img" class="quiz-placa">🛑</span>
-                <p id="pergunta-texto" style="font-weight: bold; margin-bottom: 20px;">O que significa esta placa?</p>
-                <div id="opcoes"></div>
-            </div>
-            <p id="quiz-status" style="margin-top:20px; font-size:14px; color: #888;"></p>
         </div>
     </div>
 
@@ -138,17 +141,35 @@
 </nav>
 
 <script>
-    // LÓGICA DO QUIZ
-    const perguntas = [
+    // BANCO DE DADOS AMPLIADO
+    const perguntasOriginal = [
         { placa: "🛑", correta: "Parada Obrigatória", opcoes: ["Pare se vier carro", "Parada Obrigatória", "Dê a preferência"] },
         { placa: "🚫", correta: "Sentido Proibido", opcoes: ["Sentido Proibido", "Pare", "Proibido Estacionar"] },
         { placa: "⚠️", correta: "Advertência Geral", opcoes: ["Atenção", "Obras", "Advertência Geral"] },
-        { placa: "🔞", correta: "Sentido Proibido", opcoes: ["Proibido menores", "Velocidade Máxima", "Sentido Proibido"] },
+        { placa: "🔞", correta: "Proibido menores de 18", opcoes: ["Proibido menores de 18", "Velocidade Máxima", "Sentido Proibido"] },
         { placa: "🅿️", correta: "Estacionamento Regulamentado", opcoes: ["Pare", "Estacionamento Regulamentado", "Proibido Parar"] },
-        { placa: "🛤️", correta: "Passagem de Nível", opcoes: ["Ponte", "Passagem de Nível", "Cruzamento"] }
+        { placa: "🛤️", correta: "Passagem de Nível", opcoes: ["Ponte", "Passagem de Nível", "Cruzamento"] },
+        { placa: "🚴", correta: "Passagem de Ciclistas", opcoes: ["Proibido Bicicleta", "Passagem de Ciclistas", "Ciclovia à Frente"] },
+        { placa: "🚶", correta: "Trânsito de Pedestres", opcoes: ["Passagem Protegida", "Trânsito de Pedestres", "Cuidado Crianças"] },
+        { placa: "⛽", correta: "Abastecimento", opcoes: ["Abastecimento", "Mecânico", "Posto de Saúde"] },
+        { placa: "🍴", correta: "Restaurante", opcoes: ["Hotel", "Cozinha", "Restaurante"] },
+        { placa: "📶", correta: "Área com sinal Wi-fi", opcoes: ["Radar", "Área com sinal Wi-fi", "Torre de Celular"] },
+        { placa: "🚸", correta: "Área Escolar", opcoes: ["Cuidado Crianças", "Área Escolar", "Parque Infantil"] },
+        { placa: "🐄", correta: "Animais", opcoes: ["Fazenda", "Animais na Pista", "Animais"] },
+        { placa: "🏹", correta: "Patrimônio Histórico", opcoes: ["Museu", "Patrimônio Histórico", "Teatro"] },
+        { placa: "🏥", correta: "Hospital", opcoes: ["Ambulância", "Hospital", "Farmácia"] }
     ];
 
+    let perguntas = [];
     let perguntaAtual = 0;
+    let acertos = 0;
+
+    function iniciarQuiz() {
+        perguntas = [...perguntasOriginal].sort(() => Math.random() - 0.5); // Embaralha
+        perguntaAtual = 0;
+        acertos = 0;
+        carregarPergunta();
+    }
 
     function carregarPergunta() {
         const p = perguntas[perguntaAtual];
@@ -156,14 +177,18 @@
         const divOpcoes = document.getElementById('opcoes');
         divOpcoes.innerHTML = "";
         
-        p.opcoes.forEach(opcao => {
+        // Embaralha as opções também
+        const opcoesEmbaralhadas = [...p.opcoes].sort(() => Math.random() - 0.5);
+
+        opcoesEmbaralhadas.forEach(opcao => {
             const btn = document.createElement('button');
             btn.className = 'opcao-btn';
             btn.innerText = opcao;
             btn.onclick = () => verificarResposta(opcao, btn);
             divOpcoes.appendChild(btn);
         });
-        document.getElementById('quiz-status').innerText = `Pergunta ${perguntaAtual + 1} de ${perguntas.length}`;
+        document.getElementById('quiz-status').innerText = `Placa ${perguntaAtual + 1} de ${perguntas.length}`;
+        document.getElementById('quiz-score').innerText = `Acertos: ${acertos}`;
     }
 
     function verificarResposta(escolha, btn) {
@@ -173,15 +198,21 @@
 
         if(escolha === correta) {
             btn.classList.add('correto');
+            acertos++;
         } else {
             btn.classList.add('errado');
             todosBotoes.forEach(b => { if(b.innerText === correta) b.classList.add('correto'); });
         }
 
         setTimeout(() => {
-            perguntaAtual = (perguntaAtual + 1) % perguntas.length;
-            carregarPergunta();
-        }, 1500);
+            perguntaAtual++;
+            if(perguntaAtual < perguntas.length) {
+                carregarPergunta();
+            } else {
+                alert(`Fim do Simulado! Você acertou ${acertos} de ${perguntas.length}.`);
+                iniciarQuiz();
+            }
+        }, 1200);
     }
 
     // NAVEGAÇÃO
@@ -190,13 +221,13 @@
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
         document.getElementById(pageId).classList.add('active');
         if(btn) btn.classList.add('active-nav');
-        if(pageId === 'quiz') carregarPergunta();
+        if(pageId === 'quiz') iniciarQuiz();
         if(pageId === 'mapa') carregarMapa();
     }
 
     function salvarFamilia() {
         const num = document.getElementById('tel-familia').value;
-        if(num) { localStorage.setItem('telFamilia', num); alert('Salvo!'); }
+        if(num) { localStorage.setItem('telFamilia', num); alert('Número salvo!'); }
     }
 
     function ligarFamilia() {
