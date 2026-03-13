@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Emergência Transital PRO</title>
-    <!-- Biblioteca do Scanner -->
     <script src="https://unpkg.com"></script>
 
     <style>
@@ -16,7 +15,7 @@
         body { 
             font-family: 'Segoe UI', Roboto, sans-serif; 
             background: var(--fundo); color: var(--texto); 
-            margin: 0; padding-bottom: 90px; overflow-x: hidden;
+            margin: 0; padding-bottom: 95px; overflow-x: hidden;
             display: flex; flex-direction: column; align-items: center;
         }
         
@@ -26,58 +25,46 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: sticky; top: 0; width: 100%; z-index: 1000;
         }
 
-        .content { 
-            padding: 15px; width: 100%; max-width: 500px; box-sizing: border-box;
-        }
-
+        .content { padding: 15px; width: 100%; max-width: 500px; box-sizing: border-box; }
         .page { display: none; animation: fadeIn 0.3s ease; }
         .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
 
-        /* DESIGN DOS BOTÕES */
         .btn-base { 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             gap: 8px; border: none; border-radius: 15px; font-weight: 800; color: white; 
-            text-decoration: none; min-height: 110px; padding: 10px; cursor: pointer; 
-            transition: 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.4); font-size: 12px; 
-            width: 100%; text-transform: uppercase; box-sizing: border-box;
+            min-height: 110px; padding: 10px; cursor: pointer; transition: 0.2s; width: 100%; 
+            text-transform: uppercase; box-sizing: border-box; font-size: 12px;
         }
-
-        .btn-base:active { transform: scale(0.95); opacity: 0.9; }
+        .btn-base:active { transform: scale(0.95); }
         .btn-base span { font-size: 35px; }
 
-        /* Cores */
         .bg-vermelho { background: var(--vermelho); }
         .bg-verde { background: var(--verde); }
         .bg-roxo { background: #9b59b6; }
         .bg-rosa { background: #e91e63; }
         .bg-azul { background: #2980b9; }
 
-        /* GRID DO INÍCIO */
-        .grid-home { 
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;
+        /* ESTILO QUIZ */
+        .quiz-container { background: #1e1e1e; padding: 20px; border-radius: 20px; text-align: center; }
+        .quiz-placa { font-size: 80px; margin: 20px 0; display: block; }
+        .opcao-btn { 
+            width: 100%; padding: 15px; margin: 8px 0; border-radius: 10px; border: 2px solid #333;
+            background: #252525; color: white; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
+        .correto { background: var(--verde) !important; border-color: white !important; }
+        .errado { background: var(--vermelho) !important; border-color: white !important; }
 
-        /* ESTILO ESPECÍFICO MODO IDOSO (Fundo Vermelho Alerta) */
-        #idoso { 
-            background: linear-gradient(180deg, #1a0000 0%, #121212 100%);
-            border-radius: 20px; padding: 20px;
-        }
-
-        /* MENU INFERIOR */
         nav { 
             position: fixed; bottom: 0; width: 100%; max-width: 500px;
             background: #1a1a1a; display: flex; justify-content: space-around; 
-            padding: 12px 0; border-top: 1px solid #333; z-index: 1000; 
+            padding: 10px 0; border-top: 1px solid #333; z-index: 1000; 
         }
-        nav button { 
-            background: none; border: none; color: #777; font-size: 11px; 
-            display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
-        }
+        nav button { background: none; border: none; color: #777; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         nav button.active-nav { color: var(--amarelo); font-weight: bold; }
-        .nav-icon { font-size: 22px; }
+        .nav-icon { font-size: 20px; }
 
-        input { width: 100%; padding: 18px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; font-size: 16px; }
+        input { width: 100%; padding: 18px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -86,111 +73,139 @@
 
 <div class="content">
     
-    <!-- PÁGINA 1: INÍCIO (PAINEL DE CONTROLE) -->
+    <!-- INÍCIO -->
     <div id="home" class="page active">
         <div style="background: #1e1e1e; padding: 15px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid var(--amarelo);">
             <h3 style="margin:0; font-size: 14px; color: var(--amarelo);">SISTEMA ATIVO</h3>
             <p style="margin:5px 0 0 0; font-size: 12px; color: #aaa;">Selecione uma ferramenta de suporte.</p>
         </div>
-        
-        <div class="grid-home">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <a href="tel:191" class="btn-base bg-vermelho"><span>🚨</span> POLÍCIA</a>
             <a href="tel:193" class="btn-base bg-vermelho" style="background:#b91c1c;"><span>🚑</span> BOMBEIROS</a>
             <button onclick="enviarZap()" class="btn-base bg-verde"><span>📍</span> ZAP LOCAL</button>
-            <button onclick="showPage('camera', this)" class="btn-base bg-roxo"><span>📷</span> SCANNER</button>
-            
-            <button onclick="showPage('mapa', this)" class="btn-base bg-azul" style="grid-column: span 2; min-height: 80px; flex-direction: row; gap: 15px;">
+            <button onclick="showPage('quiz', document.getElementById('nav-quiz'))" class="btn-base bg-roxo"><span>📝</span> SIMULADO</button>
+            <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base bg-azul" style="grid-column: span 2; min-height: 80px; flex-direction: row; gap: 15px;">
                 <span>🗺️</span> <b>VER MAPA E TRÂNSITO</b>
             </button>
         </div>
     </div>
 
-    <!-- PÁGINA 2: IDOSO (MODO EMERGÊNCIA) -->
+    <!-- IDOSO -->
     <div id="idoso" class="page">
         <div style="text-align: center; margin-bottom: 25px;">
             <span style="font-size: 50px;">👴</span>
             <h2 style="color: var(--amarelo); margin: 10px 0;">Modo Auxílio</h2>
-            <p style="color: #ccc; font-size: 14px;">Toque no botão para pedir ajuda agora.</p>
         </div>
-
         <div style="display: flex; flex-direction: column; gap: 20px;">
-            <a href="tel:191" onclick="tocarAlerta()" class="btn-base bg-vermelho" style="min-height: 160px; font-size: 18px; border: 3px solid white;">
-                <span>🚨</span> LIGAR PARA POLÍCIA
-            </a>
-            <button onclick="ligarFamiliaComSom()" class="btn-base bg-rosa" style="min-height: 160px; font-size: 18px;">
-                <span>❤️</span> CHAMAR FAMÍLIA
-            </button>
+            <a href="tel:191" class="btn-base bg-vermelho" style="min-height: 160px; font-size: 18px; border: 3px solid white;"><span>🚨</span> LIGAR POLÍCIA</a>
+            <button onclick="ligarFamilia()" class="btn-base bg-rosa" style="min-height: 160px; font-size: 18px;"><span>❤️</span> FAMÍLIA</button>
         </div>
     </div>
 
-    <!-- PÁGINA 3: FAMÍLIA -->
-    <div id="familia" class="page">
-        <h3 style="text-align:center; color: var(--amarelo);">CONTATO SALVO</h3>
-        <input type="tel" id="tel-familia" placeholder="DDD + Número">
-        <button onclick="salvarFamilia()" class="btn-base bg-verde" style="min-height: 60px;">💾 SALVAR NÚMERO</button>
+    <!-- QUIZ (NOVA PÁGINA) -->
+    <div id="quiz" class="page">
+        <h3 style="text-align:center; color: var(--amarelo);">SIMULADO CNH</h3>
+        <div class="quiz-container">
+            <div id="quiz-box">
+                <span id="placa-img" class="quiz-placa">🛑</span>
+                <p id="pergunta-texto" style="font-weight: bold; margin-bottom: 20px;">O que significa esta placa?</p>
+                <div id="opcoes"></div>
+            </div>
+            <p id="quiz-status" style="margin-top:20px; font-size:14px; color: #888;"></p>
+        </div>
     </div>
 
-    <!-- PÁGINA 4: MAPA -->
+    <!-- FAMÍLIA -->
+    <div id="familia" class="page">
+        <h3 style="text-align:center; color: var(--amarelo);">CONTATO</h3>
+        <input type="tel" id="tel-familia" placeholder="DDD + Número">
+        <button onclick="salvarFamilia()" class="btn-base bg-verde" style="min-height: 60px;">💾 SALVAR</button>
+    </div>
+
+    <!-- MAPA -->
     <div id="mapa" class="page" style="height: 65vh;">
         <iframe id="google-maps" width="100%" height="100%" style="border:0; border-radius: 20px;"></iframe>
     </div>
 
-    <!-- PÁGINA 5: CÂMERA -->
-    <div id="camera" class="page">
-        <h3 style="text-align:center; color: var(--amarelo);">SCANNER DE PLACA</h3>
-        <div id="reader" style="border-radius: 20px; overflow: hidden;"></div>
-    </div>
 </div>
 
 <nav>
-    <button onclick="showPage('home', this)" class="active-nav"><span>🚨</span>Início</button>
-    <button onclick="showPage('idoso', this)"><span>👴</span>Idoso</button>
-    <button onclick="showPage('familia', this)"><span>❤️</span>Família</button>
-    <button onclick="showPage('mapa', this)"><span>🗺️</span>Mapa</button>
-    <button onclick="showPage('camera', this)"><span>📷</span>Câmera</button>
+    <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
+    <button onclick="showPage('idoso', this)"><span class="nav-icon">👴</span>Idoso</button>
+    <button id="nav-quiz" onclick="showPage('quiz', this)"><span class="nav-icon">📝</span>Simulado</button>
+    <button onclick="showPage('familia', this)"><span class="nav-icon">❤️</span>Família</button>
+    <button id="nav-mapa" onclick="showPage('mapa', this)"><span class="nav-icon">🗺️</span>Mapa</button>
 </nav>
 
 <script>
-    // Sistema de Som
-    const somAlerta = new Audio('https://www.soundjay.com');
+    // LÓGICA DO QUIZ
+    const perguntas = [
+        { placa: "🛑", correta: "Parada Obrigatória", opcoes: ["Pare se vier carro", "Parada Obrigatória", "Dê a preferência"] },
+        { placa: "🚫", correta: "Sentido Proibido", opcoes: ["Sentido Proibido", "Pare", "Proibido Estacionar"] },
+        { placa: "⚠️", correta: "Advertência Geral", opcoes: ["Atenção", "Obras", "Advertência Geral"] },
+        { placa: "🔞", correta: "Sentido Proibido", opcoes: ["Proibido menores", "Velocidade Máxima", "Sentido Proibido"] },
+        { placa: "🅿️", correta: "Estacionamento Regulamentado", opcoes: ["Pare", "Estacionamento Regulamentado", "Proibido Parar"] },
+        { placa: "🛤️", correta: "Passagem de Nível", opcoes: ["Ponte", "Passagem de Nível", "Cruzamento"] }
+    ];
 
-    function tocarAlerta() {
-        somAlerta.play();
-        if (navigator.vibrate) navigator.vibrate(500);
+    let perguntaAtual = 0;
+
+    function carregarPergunta() {
+        const p = perguntas[perguntaAtual];
+        document.getElementById('placa-img').innerText = p.placa;
+        const divOpcoes = document.getElementById('opcoes');
+        divOpcoes.innerHTML = "";
+        
+        p.opcoes.forEach(opcao => {
+            const btn = document.createElement('button');
+            btn.className = 'opcao-btn';
+            btn.innerText = opcao;
+            btn.onclick = () => verificarResposta(opcao, btn);
+            divOpcoes.appendChild(btn);
+        });
+        document.getElementById('quiz-status').innerText = `Pergunta ${perguntaAtual + 1} de ${perguntas.length}`;
     }
 
-    function ligarFamiliaComSom() {
-        tocarAlerta();
-        setTimeout(ligarFamilia, 500); // Espera o som tocar antes de ligar
+    function verificarResposta(escolha, btn) {
+        const correta = perguntas[perguntaAtual].correta;
+        const todosBotoes = document.querySelectorAll('.opcao-btn');
+        todosBotoes.forEach(b => b.disabled = true);
+
+        if(escolha === correta) {
+            btn.classList.add('correto');
+        } else {
+            btn.classList.add('errado');
+            todosBotoes.forEach(b => { if(b.innerText === correta) b.classList.add('correto'); });
+        }
+
+        setTimeout(() => {
+            perguntaAtual = (perguntaAtual + 1) % perguntas.length;
+            carregarPergunta();
+        }, 1500);
     }
 
-    // Navegação
+    // NAVEGAÇÃO
     function showPage(pageId, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
         document.getElementById(pageId).classList.add('active');
         if(btn) btn.classList.add('active-nav');
+        if(pageId === 'quiz') carregarPergunta();
         if(pageId === 'mapa') carregarMapa();
     }
 
-    // Funções de Lógica
     function salvarFamilia() {
         const num = document.getElementById('tel-familia').value;
-        if(num) {
-            localStorage.setItem('telFamilia', num);
-            alert('Contato salvo com sucesso! ✅');
-        }
+        if(num) { localStorage.setItem('telFamilia', num); alert('Salvo!'); }
     }
 
     function ligarFamilia() {
         const num = localStorage.getItem('telFamilia');
         if(num) window.location.href = "tel:" + num;
-        else alert('Configure o número da família primeiro!');
+        else alert('Configure o número primeiro!');
     }
 
-    function enviarZap() {
-        window.open("https://wa.me🚨 Preciso de ajuda urgente!", "_blank");
-    }
+    function enviarZap() { window.open("https://wa.me de ajuda!", "_blank"); }
 
     function carregarMapa() {
         if (navigator.geolocation) {
