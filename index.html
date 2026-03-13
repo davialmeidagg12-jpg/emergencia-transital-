@@ -4,270 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Emergência Transital PRO</title>
-    <!-- Biblioteca do Scanner -->
     <script src="https://unpkg.com"></script>
 
     <style>
-    :root { 
-        --amarelo: #ffcc00; --vermelho: #d90429; --verde: #2ecc71; 
-        --fundo: #121212; --card: #1e1e1e; --texto: #ffffff;
-    }
+        :root { 
+            --amarelo: #ffcc00; --vermelho: #d90429; --verde: #2ecc71; 
+            --fundo: #121212; --card: #1e1e1e; --texto: #ffffff;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--fundo); color: var(--texto); margin: 0; padding-bottom: 80px; }
+        header { background: var(--amarelo); color: #000; padding: 15px; text-align: center; font-weight: 900; position: sticky; top: 0; z-index: 1000; }
+        .content { padding: 15px; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    body { 
-        font-family: 'Segoe UI', Roboto, sans-serif; 
-        background: var(--fundo); color: var(--texto); 
-        margin: 0; padding-bottom: 80px; overflow-x: hidden; 
-    }
-    
-    header { 
-        background: var(--amarelo); color: #000; padding: 15px; 
-        text-align: center; font-weight: 900; font-size: 18px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000;
-    }
+        .btn-base { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 8px; border: none; border-radius: 15px; font-weight: 700; color: white; 
+            padding: 20px 10px; cursor: pointer; transition: 0.2s; width: 100%; font-size: 13px;
+        }
+        .bg-vermelho { background: var(--vermelho); }
+        .bg-verde { background: var(--verde); }
+        .bg-roxo { background: #9b59b6; }
+        .bg-rosa { background: #e91e63; }
+        .btn-base span { font-size: 28px; }
 
-    .content { padding: 15px; }
-    .page { display: none; animation: fadeIn 0.3s ease; }
-    .active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* BOTÕES DA HOME (GRID) */
-    .grid-botoes { 
-        display: grid; 
-        grid-template-columns: 1fr 1fr; 
-        gap: 15px; 
-        margin-top: 10px;
-    }
-
-    .btn-base { 
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 8px; border: none; border-radius: 15px; font-weight: 700; color: white; 
-        text-decoration: none; padding: 20px 10px; cursor: pointer; transition: 0.2s;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3); font-size: 13px;
-    }
-
-    .btn-base:active { transform: scale(0.95); opacity: 0.8; }
-    .btn-base span { font-size: 28px; } /* Tamanho do Emoji */
-
-    /* Botão de Mapa (Largo) */
-    .btn-largo { 
-        grid-column: span 2; margin-top: 5px; padding: 18px;
-        background: #3498db; flex-direction: row; font-size: 16px;
-    }
-
-    /* Cores dos Botões */
-    .bg-vermelho { background: var(--vermelho); }
-    .bg-verde { background: var(--verde); }
-    .bg-roxo { background: #9b59b6; }
-    .bg-rosa { background: #e91e63; }
-
-    /* MENU INFERIOR */
-    nav { 
-        position: fixed; bottom: 0; left: 0; right: 0; 
-        background: #1a1a1a; display: flex; justify-content: space-around; 
-        padding: 12px 0; border-top: 1px solid #333; z-index: 1000; 
-    }
-    nav button { 
-        background: none; border: none; color: #777; font-size: 11px; 
-        display: flex; flex-direction: column; align-items: center; gap: 4px;
-    }
-    nav button.active-nav { color: var(--amarelo); font-weight: bold; }
-    .nav-icon { font-size: 22px; }
-
-    /* INPUTS */
-    input { 
-        width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 10px; 
-        border: 1px solid #444; background: #222; color: white; box-sizing: border-box; 
-    }
- </style>
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
+        nav button { background: none; border: none; color: #777; font-size: 11px; display: flex; flex-direction: column; align-items: center; }
+        nav button.active-nav { color: var(--amarelo); }
+    </style>
 </head>
 <body>
-<header style="background: var(--amarelo); color: #000; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-family: sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000;">
-    <span style="font-size: 26px;">🛡️</span>
-    <div style="text-align: left; line-height: 1.1;">
-</header>
 
- <div class="content">
-     <!-- PÁGINA 1: INÍCIO -->
-<div id="home" class="page active">
-    <h3 style="text-align:center; margin: 10px 0 20px 0; color: var(--amarelo); font-size: 14px;">PAINEL DE CONTROLE</h3>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-        <a href="tel:191" class="btn-base bg-vermelho" style="padding: 20px 10px; flex-direction: column;"><span>🚨</span> POLÍCIA</a>
-        <a href="tel:193" class="btn-base bg-vermelho" style="background:#b91c1c; padding: 20px 10px; flex-direction: column;"><span>🚑</span> BOMBEIROS</a>
-        <button onclick="enviarZap()" class="btn-base bg-verde" style="padding: 20px 10px; flex-direction: column;"><span>📍</span> MANDAR ZAP</button>
-        <button onclick="showPage('camera', document.getElementById('nav-camera'))" class="btn-base bg-roxo" style="padding: 20px 10px; flex-direction: column;"><span>📷</span> LER PLACA</button>
-        <button onclick="tocarSirene()" class="btn-base" style="background:#000; grid-column: span 2; padding: 15px; margin-top: 10px; border: 2px solid var(--vermelho);">
-    <span>🔊</span> ATIVAR SIRENE DE EMERGÊNCIA
-</button>
-     <!-- BOTÃO MAPA LARGO -->
-       <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base" 
-              <!-- BOTÃO MAPA -->
-        <button onclick="showPage('mapa', document.getElementById('nav-mapa'))" class="btn-base" style="grid-column: span 2; background: #2980b9 !important; color: white !important; padding: 20px; margin-top: 10px; flex-direction: row; gap: 15px; border: none;">
-            <span>🗺️</span> <b>VER MAPA E TRÂNSITO</b>
-        </button>
-<!-- PÁGINA 2: IDOSO -->
-<div id="idoso" class="page">
-    <a href="tel:191" class="btn-base btn-idoso bg-vermelho"><span>🚨</span> POLÍCIA</a>
-    <button onclick="ligarFamilia()" class="btn-base btn-idoso bg-rosa"><span>❤️</span> FAMÍLIA</button>
-    <button onclick="enviarZap()" class="btn-base btn-idoso bg-verde"><span>📍</span> MANDAR ZAP</button>
-</div>
+<header>🛡️ EMERGÊNCIA TRANSITAL PRO</header>
 
-            <input type="tel" id="tel-familia" placeholder="DDD + Número">
-            <button onclick="salvarFamilia()" class="btn-base bg-verde" style="padding:15px;">💾 SALVAR</button>
-            <div id="contato-salvo" style="margin-top:20px; display:none; text-align:center;">
-                <button onclick="ligarFamilia()" class="btn-base bg-rosa" style="padding:20px;">📞 LIGAR AGORA</button>
-            </div>
-        </div>
-
-        <!-- PÁGINA 4: MAPA -->
-        <div id="mapa" class="page" style="padding:0; height:100%;">
-            <iframe id="google-maps" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-        </div>
-
-        <!-- PÁGINA 5: CÂMERA (SCANNER) -->
-        <div id="camera" class="page">
-                  <!-- CONTINUAÇÃO DA PÁGINA 3: FAMÍLIA -->
-            <div id="contato-salvo" style="margin-top:20px; display:none; text-align:center;">
-                <button onclick="ligarFamilia()" class="btn-base bg-rosa" style="padding:20px;">📞 LIGAR AGORA</button>
-            </div>
-        </div>
-
-        <!-- PÁGINA 4: MAPA -->
-        <div id="mapa" class="page" style="padding:0; height:100%;">
-            <iframe id="google-maps" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-        </div>
-
-        <!-- PÁGINA 5: CÂMERA (SCANNER) -->
-        <div id="camera" class="page">
-            <h3 style="text-align:center; color:var(--amarelo);">Identificador de Placas</h3>
-            <div id="reader"></div>
-            <div id="res-scan" style="display:none; margin-top:20px; background:#252525; padding:20px; border-radius:20px; border:1px solid var(--amarelo);">
-                <h4 id="pl-nome" style="color:var(--amarelo); margin:0;"></h4>
-                <p id="pl-desc" style="font-size:14px;"></p>
-                <button class="btn-base bg-azul" onclick="restartScan()" style="padding:10px; margin-top:10px;">ESCANEAR OUTRA</button>
-            </div>
+<div class="content">
+    <!-- PÁGINA 1: HOME -->
+    <div id="home" class="page active">
+        <h3 style="text-align:center; color: var(--amarelo);">PAINEL DE CONTROLE</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <a href="tel:191" class="btn-base bg-vermelho"><span>🚨</span> POLÍCIA</a>
+            <a href="tel:193" class="btn-base bg-vermelho" style="background:#b91c1c;"><span>🚑</span> BOMBEIROS</a>
+            <button onclick="enviarZap()" class="btn-base bg-verde"><span>📍</span> MANDAR ZAP</button>
+            <button onclick="showPage('camera', this)" class="btn-base bg-roxo"><span>📷</span> LER PLACA</button>
+            
+            <button onclick="showPage('mapa', this)" class="btn-base" style="grid-column: span 2; background: #2980b9; flex-direction: row; gap: 15px;">
+                <span>🗺️</span> <b>VER MAPA E TRÂNSITO</b>
+            </button>
         </div>
     </div>
 
-    <!-- MENU INFERIOR -->
-    <nav>
-        <button onclick="showPage('home', this)" class="active-nav"><span class="nav-icon">🚨</span>Início</button>
-        <button onclick="showPage('idoso', this)"><span class="nav-icon">👴</span>Idoso</button>
-        <button onclick="showPage('familia', this)"><span class="nav-icon">❤️</span>Família</button>
-        <button id="nav-mapa" onclick="showPage('mapa', this)"><span class="nav-icon">🗺️</span>Mapa</button>
-        <button id="nav-camera" onclick="showPage('camera', this)"><span class="nav-icon">📷</span>Câmera</button>
-    </nav>
+    <!-- PÁGINA 2: IDOSO -->
+    <div id="idoso" class="page">
+        <h3 style="text-align:center; color: var(--amarelo);">MODO IDOSO</h3>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <a href="tel:191" class="btn-base bg-vermelho"><span>🚨</span> LIGAR PARA POLÍCIA</a>
+            <button onclick="ligarFamilia()" class="btn-base bg-rosa"><span>❤️</span> LIGAR PARA FAMÍLIA</button>
+            <button onclick="enviarZap()" class="btn-base bg-verde"><span>📍</span> ENVIAR MINHA LOCALIZAÇÃO</button>
+        </div>
+    </div>
 
-    <script>
-        let lat = 0, lon = 0, scanner = null;
+    <!-- PÁGINA 3: FAMÍLIA -->
+    <div id="familia" class="page">
+        <h3 style="text-align:center; color: var(--amarelo);">CONTATO DE EMERGÊNCIA</h3>
+        <input type="tel" id="tel-familia" placeholder="DDD + Número" style="width:100%; padding:15px; border-radius:10px; margin-bottom:10px;">
+        <button onclick="salvarFamilia()" class="btn-base bg-verde">💾 SALVAR NÚMERO</button>
+    </div>
 
-// Tenta pegar localização
-// PEGAR LOCALIZAÇÃO E CARREGAR MAPA COM TRÂNSITO
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(p => {
-        lat = p.coords.latitude; 
-        lon = p.coords.longitude;
+    <!-- PÁGINA 4: MAPA -->
+    <div id="mapa" class="page" style="height: 400px;">
+        <iframe id="google-maps" width="100%" height="100%" style="border:0; border-radius:15px;"></iframe>
+    </div>
+
+    <!-- PÁGINA 5: CÂMERA -->
+    <div id="camera" class="page">
+        <h3 style="text-align:center; color:var(--amarelo);">Identificador de Placas</h3>
+        <div id="reader" style="width: 100%;"></div>
+    </div>
+</div>
+
+<nav>
+    <button onclick="showPage('home', this)" class="active-nav"><span>🚨</span>Início</button>
+    <button onclick="showPage('idoso', this)"><span>👴</span>Idoso</button>
+    <button onclick="showPage('familia', this)"><span>❤️</span>Família</button>
+    <button onclick="showPage('mapa', this)"><span>🗺️</span>Mapa</button>
+    <button onclick="showPage('camera', this)"><span>📷</span>Câmera</button>
+</nav>
+
+<script>
+    function showPage(pageId, btn) {
+        // Esconde todas as páginas
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        // Mostra a página clicada
+        document.getElementById(pageId).classList.add('active');
         
-        // CORREÇÃO: Usando CRASE (tecla ao lado do P no teclado)
-        const mapUrl = `https://maps.google.com{lat},${lon}&layer=t&t=m&z=15&output=embed`;
-        
-        const mapElement = document.getElementById('google-maps');
-        if(mapElement) mapElement.src = mapUrl;
-    }, (err) => {
-        console.log("Erro de GPS: ", err);
-    });
-}
+        // Ajusta cores do menu
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
+        if(btn.tagName === "BUTTON") btn.classList.add('active-nav');
 
-        // USE EXATAMENTE ESTE LINK COM CRASE:
-        const mapUrl = `https://maps.google.com{lat},${lon}&layer=t&t=m&z=15&output=embed`;
-        document.getElementById('google-maps').src = mapUrl;
-    });
-}
+        if(pageId === 'mapa') carregarMapa();
+    }
 
+    function carregarMapa() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(p => {
+                const url = `https://www.google.com{p.coords.latitude},${p.coords.longitude}&zoom=15`;
+                document.getElementById('google-maps').src = url;
+            });
         }
-    }, (err) => {
-        console.log("Erro de GPS: ", err);
-    });
-}
-// FUNÇÃO QUE DESTRAVA AS PÁGINAS
-function showPage(pId, btn) {
-    // Esconde todas
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    // Mostra a correta
-    const target = document.getElementById(pId);
-    if(target) target.style.display = 'block';
-
-    // Estilo do menu
-    document.querySelectorAll('nav button').forEach(n => n.style.color = '#666');
-    if(btn) btn.style.color = '#ffcc00';
-
-    // Para a câmera se sair da aba
-    if(pId !== 'camera' && scanner) {
-        scanner.stop().catch(() => null);
     }
-}
 
-function enviarZap() {
-    const tel = localStorage.getItem('ice_tel');
-    if(!tel) return alert("Salve um contato na aba Família!");
-    const msg = encodeURIComponent(`🚨 EMERGÊNCIA! Localização: https://www.google.com{lat},${lon}`);
-    window.open(`https://wa.me{tel.replace(/\D/g,'')}?text=${msg}`, '_blank');
-}
-
-function salvarFamilia() {
-    const n = document.getElementById('nome-familia').value;
-    const t = document.getElementById('tel-familia').value;
-    if(n && t) {
-        localStorage.setItem('ice_nome', n);
-        localStorage.setItem('ice_tel', t);
-        alert("✅ Salvo com sucesso!");
-        document.getElementById('contato-salvo').style.display = 'block';
+    function salvarFamilia() {
+        const num = document.getElementById('tel-familia').value;
+        localStorage.setItem('telFamilia', num);
+        alert('Número salvo com sucesso!');
     }
-}
-// --- CÓDIGO DA CÂMERA ---
-function startScan() {
-    // 1. Cria o leitor no quadrado "reader"
-    scanner = new Html5Qrcode("reader");
-    
-    const config = { 
-        fps: 10, 
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1.0 
-    };
 
-    // 2. Tenta abrir a câmera de trás
-    scanner.start({ facingMode: "environment" }, config, (txt) => {
-        // Se ler algo, mostra o resultado na tela
-        document.getElementById('res-scan').style.display = 'block';
-        document.getElementById('pl-nome').innerText = "Identificado!";
-        document.getElementById('pl-desc').innerText = "Conteúdo: " + txt;
-        
-        stopScan(); // Desliga a câmera após a leitura
-    }).catch(err => {
-        console.error("Erro na câmera: ", err);
-        alert("⚠️ Ative a permissão da câmera no navegador!");
-    });
-}
-
-function stopScan() {
-    if(scanner) {
-        scanner.stop().then(() => {
-            document.getElementById('reader').innerHTML = ""; 
-        }).catch(err => console.log("Erro ao parar", err));
+    function ligarFamilia() {
+        const num = localStorage.getItem('telFamilia');
+        if(num) window.location.href = "tel:" + num;
+        else alert('Salve um número primeiro!');
     }
-}
 
-function restartScan() {
-    document.getElementById('res-scan').style.display = 'none';
-    startScan();
-}
-
-// Garante que o app comece na Home
-window.onload = () => {
-    showPage('home', document.querySelector('nav button'));
-    if(localStorage.getItem('ice_tel')) document.getElementById('contato-salvo').style.display = 'block';
-};
+    function enviarZap() {
+        const texto = "Preciso de ajuda! Minha localização: https://www.google.com";
+        window.open(`https://wa.me{texto}`, '_blank');
+    }
 </script>
+
 </body>
 </html>
-
